@@ -8,6 +8,91 @@
 import UIKit
 
 final class UserDetailViewController: UIViewController {
+
+    
+    private let followers: UILabel = {
+       let label = UILabel()
+        label.text = "Followers: 53"
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .white
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private let following: UILabel = {
+       let label = UILabel()
+        label.text = "Following: 124"
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .white
+        label.textAlignment = .right
+        return label
+    }()
+    
+    private let followersStackView: UIStackView = {
+       let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        return stackView
+    }()
+    
+    
+    private let emailimage: UIImageView = {
+       let image = UIImageView()
+        image.image = UIImage(systemName: "envelope")
+        image.contentMode = .scaleAspectFit
+        image.tintColor = .accentGreen
+        return image
+    }()
+    
+    private let email: UILabel = {
+        let label = UILabel()
+        label.text = "useremail@gmail.com"
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 16)
+        return label
+    }()
+    
+    private let emailStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        return stackView
+    }()
+    
+    private let companyImage: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(systemName: "building.2")
+        image.contentMode = .scaleAspectFit
+        image.tintColor = .accentGreen
+        return image
+    }()
+    
+    private let comanyName: UILabel = {
+        let label = UILabel()
+        label.text = "Company name"
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 16)
+        return label
+    }()
+    
+    private let companyStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        return stackView
+    }()
+    
+    private let contacktsStackView: UIStackView = {
+       let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+//        stackView.spacing = 4
+        stackView.alignment = .leading
+        return stackView
+    }()
+    
+    
     
     private let userName: UILabel = {
        let label = UILabel()
@@ -21,7 +106,7 @@ final class UserDetailViewController: UIViewController {
         let label = UILabel()
         label.text = "Subtitle Label"
         label.textColor = .white
-        label.font = .boldSystemFont(ofSize: 16)
+        label.font = .boldSystemFont(ofSize: 18)
         return label
     }()
     
@@ -104,7 +189,7 @@ final class UserDetailViewController: UIViewController {
         titleStackView.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
         titleStackView.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: 24).isActive = true
         titleStackView.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        titleStackView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        titleStackView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
         
         registrationDate.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
@@ -112,16 +197,40 @@ final class UserDetailViewController: UIViewController {
         registrationDate.widthAnchor.constraint(equalToConstant: 200).isActive = true
         registrationDate.heightAnchor.constraint(equalToConstant: 22).isActive = true
         
-        
-        
-        
-        
-        
-        
         gitHubBottomImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -58).isActive = true
         gitHubBottomImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         gitHubBottomImage.widthAnchor.constraint(equalToConstant: 44).isActive = true
         gitHubBottomImage.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        emailStackView.addArrangedSubview(emailimage)
+        emailStackView.addArrangedSubview(email)
+        
+        companyStackView.addArrangedSubview(companyImage)
+        companyStackView.addArrangedSubview(comanyName)
+        
+        contacktsStackView.addArrangedSubview(emailStackView)
+        contacktsStackView.addArrangedSubview(companyStackView)
+        
+        userCardView.addSubview(contacktsStackView)
+        
+        
+        contacktsStackView.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: 16).isActive = true
+        contacktsStackView.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
+        contacktsStackView.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        contacktsStackView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        
+        
+        followersStackView.addArrangedSubview(followers)
+        followersStackView.addArrangedSubview(following)
+        
+        userCardView.addSubview(followersStackView)
+        
+        
+        followersStackView.widthAnchor.constraint(equalToConstant: 260).isActive = true
+        followersStackView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        followersStackView.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
+        followersStackView.topAnchor.constraint(equalTo: contacktsStackView.bottomAnchor, constant: 16).isActive = true
         
     }
 }
