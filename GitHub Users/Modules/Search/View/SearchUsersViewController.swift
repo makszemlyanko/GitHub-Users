@@ -19,6 +19,8 @@ final class SearchUsersViewController: UIViewController {
     private let searchController: UISearchController = {
         let controller = UISearchController(searchResultsController: nil)
         controller.searchBar.placeholder = "Search Users"
+        controller.searchBar.barStyle = .black
+        controller.searchBar.searchTextField.leftView?.tintColor = .accentGreen
         controller.searchBar.searchBarStyle = .minimal
         controller.obscuresBackgroundDuringPresentation = false
         return controller
@@ -47,6 +49,7 @@ final class SearchUsersViewController: UIViewController {
         super.viewDidLayoutSubviews()
         usersTableView.frame = view.bounds
     }
+    
     
     private func addNavBarImage() {
         let navController = navigationController!
@@ -91,7 +94,10 @@ extension SearchUsersViewController: UITableViewDataSource {
 }
 
 extension SearchUsersViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailVC = UserDetailViewController()
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
 }
 
 extension SearchUsersViewController: UISearchBarDelegate {
