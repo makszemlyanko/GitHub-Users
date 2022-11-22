@@ -8,7 +8,12 @@
 import UIKit
 import Kingfisher
 
-final class SearchUsersViewController: UIViewController {
+final class SearchUsersViewController: UIViewController, UISearchControllerDelegate {
+    
+    private var searchOffset = 0
+    private var isPaginating = false
+    
+    private var timer: Timer?
     
     var users = [User]()
     
@@ -32,8 +37,7 @@ final class SearchUsersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        APICaller.shared.getUsers { [weak self] response in
-            
+        APICaller.shared.getListOfAllUsers { [weak self] response in
             switch response {
             case .success(let results):
                 self?.users = results
@@ -44,21 +48,28 @@ final class SearchUsersViewController: UIViewController {
                 print(error.localizedDescription)
             }
         }
+        
+        
+        
     
+        
+        
+        
+        
+        
+
         addNavBarImage()
+
         
         setupSearchBar()
-        
-        
-        
         
         view.addSubview(usersTableView)
         usersTableView.dataSource = self
         usersTableView.delegate = self
         
-//        addNavBarImage()
+
         
-        navigationItem.searchController = searchController
+        navigationItem.searchController = self.searchController
         navigationController?.navigationBar.tintColor = .accentGreen
         
         navigationController?.navigationBar.barTintColor = .backgroundDarkGray
@@ -67,9 +78,22 @@ final class SearchUsersViewController: UIViewController {
 
     }
     
+    @objc func pullToRefreshList() {
+        print("refresh")
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         usersTableView.frame = view.bounds
+    }
+    
+    
+    private func setupSearchBar() {
+        definesPresentationContext = true
+        navigationItem.searchController = self.searchController
+        navigationItem.hidesSearchBarWhenScrolling = true
+        self.searchController.obscuresBackgroundDuringPresentation = false
+//        self.searchController.searchBar.delegate = self
     }
     
     
@@ -86,13 +110,17 @@ final class SearchUsersViewController: UIViewController {
         navigationItem.titleView = imageView
     }
     
-    private func setupSearchBar() {
-        definesPresentationContext = true
-        navigationItem.searchController = self.searchController
-        navigationItem.hidesSearchBarWhenScrolling = true
-        self.searchController.obscuresBackgroundDuringPresentation = false
-        self.searchController.searchBar.delegate = self
+    private func createSpinnerForFooter() -> UIView {
+        let footerView = UIView(frame: .init(x: 0, y: 0, width: view.frame.width, height: 100))
+        let spinner = UIActivityIndicatorView()
+        spinner.center = footerView.center
+        spinner.color = .accentGreen
+        footerView.addSubview(spinner)
+        spinner.startAnimating()
+        return footerView
     }
+    
+
     
 
     
@@ -110,8 +138,31 @@ extension SearchUsersViewController: UITableViewDataSource {
         
         
         cell.nameLabel.text = self.users[indexPath.row].login
+        cell.idLabel.text = "Id: \(self.users[indexPath.row].id)"
         let imageURL = URL(string: self.users[indexPath.row].avatar_url)
         cell.avatarImage.kf.setImage(with: imageURL)
+        
+        
+        // pagination
+        self.usersTableView.tableFooterView = createSpinnerForFooter()
+        
+        if indexPath.row == users.count - 1 && !isPaginating {
+            self.isPaginating = true
+            APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { response in
+                switch response {
+                case .success(let nextUsersPage):
+                    self.users += nextUsersPage
+                    self.searchOffset += 30
+                    DispatchQueue.main.async {
+                        self.usersTableView.reloadData()
+                    }
+                    self.isPaginating = false
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+                
+            }
+        }
         
         
         return cell
@@ -129,6 +180,11 @@ extension SearchUsersViewController: UITableViewDelegate {
     }
 }
 
-extension SearchUsersViewController: UISearchBarDelegate {
-
+extension SearchUsersViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        if position > (usersTableView.contentSize.height - scrollView.frame.size.height) {
+            
+        }
+    }
 }

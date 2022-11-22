@@ -9,9 +9,11 @@
 /* Begin PBXBuildFile section */
 		15812E66292B55B70045C46F /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E65292B55B70045C46F /* UserTableViewCell.swift */; };
 		15812E78292B7CBF0045C46F /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E77292B7CBF0045C46F /* UserDetailViewController.swift */; };
-		15812E7B292BA40C0045C46F /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E7A292BA40C0045C46F /* Users.swift */; };
 		15812E7E292BA4870045C46F /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E7D292BA4870045C46F /* APICaller.swift */; };
 		15812E82292CB4430045C46F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 15812E81292CB4430045C46F /* Kingfisher */; };
+		15812E86292CBB270045C46F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 15812E85292CBB270045C46F /* Alamofire */; };
+		15812E8F292CC39F0045C46F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E8E292CC39F0045C46F /* User.swift */; };
+		15812E92292CC5710045C46F /* UserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E91292CC5710045C46F /* UserDetail.swift */; };
 		15F6B4EA2927A7C8003F4AA8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F6B4E92927A7C8003F4AA8 /* AppDelegate.swift */; };
 		15F6B4EC2927A7C8003F4AA8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F6B4EB2927A7C8003F4AA8 /* SceneDelegate.swift */; };
 		15F6B4F32927A7CB003F4AA8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 15F6B4F22927A7CB003F4AA8 /* Assets.xcassets */; };
@@ -23,8 +25,9 @@
 /* Begin PBXFileReference section */
 		15812E65292B55B70045C46F /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		15812E77292B7CBF0045C46F /* UserDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
-		15812E7A292BA40C0045C46F /* Users.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
 		15812E7D292BA4870045C46F /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
+		15812E8E292CC39F0045C46F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		15812E91292CC5710045C46F /* UserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetail.swift; sourceTree = "<group>"; };
 		15F6B4E62927A7C8003F4AA8 /* GitHub Users.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GitHub Users.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		15F6B4E92927A7C8003F4AA8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15F6B4EB2927A7C8003F4AA8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -41,12 +44,38 @@
 			buildActionMask = 2147483647;
 			files = (
 				15812E82292CB4430045C46F /* Kingfisher in Frameworks */,
+				15812E86292CBB270045C46F /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		15812E8A292CC3650045C46F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				15812E8B292CC3870045C46F /* Network */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		15812E8B292CC3870045C46F /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				15812E7D292BA4870045C46F /* APICaller.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		15812E8D292CC3910045C46F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				15812E8E292CC39F0045C46F /* User.swift */,
+				15812E91292CC5710045C46F /* UserDetail.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		15F6B4DD2927A7C8003F4AA8 = {
 			isa = PBXGroup;
 			children = (
@@ -66,14 +95,12 @@
 		15F6B4E82927A7C8003F4AA8 /* GitHub Users */ = {
 			isa = PBXGroup;
 			children = (
+				15812E8D292CC3910045C46F /* Model */,
+				15812E8A292CC3650045C46F /* Services */,
 				15F6B5122927B159003F4AA8 /* Extensions */,
 				15F6B50B2927B0EB003F4AA8 /* Modules */,
-				15F6B50A2927B0E3003F4AA8 /* Router */,
-				15F6B5092927B0DC003F4AA8 /* Builder */,
 				15F6B5072927ACA5003F4AA8 /* Application */,
 				15F6B5002927AB4F003F4AA8 /* Supporting files */,
-				15812E7A292BA40C0045C46F /* Users.swift */,
-				15812E7D292BA4870045C46F /* APICaller.swift */,
 			);
 			path = "GitHub Users";
 			sourceTree = "<group>";
@@ -95,20 +122,6 @@
 				15F6B4EB2927A7C8003F4AA8 /* SceneDelegate.swift */,
 			);
 			path = Application;
-			sourceTree = "<group>";
-		};
-		15F6B5092927B0DC003F4AA8 /* Builder */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Builder;
-			sourceTree = "<group>";
-		};
-		15F6B50A2927B0E3003F4AA8 /* Router */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Router;
 			sourceTree = "<group>";
 		};
 		15F6B50B2927B0EB003F4AA8 /* Modules */ = {
@@ -171,6 +184,7 @@
 			name = "GitHub Users";
 			packageProductDependencies = (
 				15812E81292CB4430045C46F /* Kingfisher */,
+				15812E85292CBB270045C46F /* Alamofire */,
 			);
 			productName = "GitHub Users";
 			productReference = 15F6B4E62927A7C8003F4AA8 /* GitHub Users.app */;
@@ -201,6 +215,7 @@
 			mainGroup = 15F6B4DD2927A7C8003F4AA8;
 			packageReferences = (
 				15812E80292CB4420045C46F /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				15812E84292CBB270045C46F /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 15F6B4E72927A7C8003F4AA8 /* Products */;
 			projectDirPath = "";
@@ -232,9 +247,10 @@
 				15F6B5142927B172003F4AA8 /* Colors.swift in Sources */,
 				15812E78292B7CBF0045C46F /* UserDetailViewController.swift in Sources */,
 				15F6B4EC2927A7C8003F4AA8 /* SceneDelegate.swift in Sources */,
+				15812E8F292CC39F0045C46F /* User.swift in Sources */,
 				15812E66292B55B70045C46F /* UserTableViewCell.swift in Sources */,
 				15F6B5042927ABD4003F4AA8 /* SearchUsersViewController.swift in Sources */,
-				15812E7B292BA40C0045C46F /* Users.swift in Sources */,
+				15812E92292CC5710045C46F /* UserDetail.swift in Sources */,
 				15812E7E292BA4870045C46F /* APICaller.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -439,6 +455,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		15812E84292CBB270045C46F /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -446,6 +470,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 15812E80292CB4420045C46F /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		15812E85292CBB270045C46F /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 15812E84292CBB270045C46F /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

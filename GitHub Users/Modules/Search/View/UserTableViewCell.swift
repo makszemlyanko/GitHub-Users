@@ -18,7 +18,7 @@ final class UserTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let subtitleLabel: UILabel = {
+    var idLabel: UILabel = {
         let label = UILabel()
         label.text = "Subtitle Label"
         label.textColor = .white
@@ -77,7 +77,7 @@ final class UserTableViewCell: UITableViewCell {
         cellView.addSubview(infoImage)
         cellView.addSubview(nameLabel)
         stackView.addArrangedSubview(nameLabel)
-        stackView.addArrangedSubview(subtitleLabel)
+        stackView.addArrangedSubview(idLabel)
         cellView.addSubview(stackView)
         //        self.selectionStyle = .none
         
