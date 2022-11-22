@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class SearchUsersViewController: UIViewController {
+    
+    var users = [User]()
     
     private let usersTableView: UITableView = {
         let table = UITableView()
@@ -29,12 +32,22 @@ final class SearchUsersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Users"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationItem.largeTitleDisplayMode = .always
+        APICaller.shared.getUsers { [weak self] response in
+            
+            switch response {
+            case .success(let results):
+                self?.users = results
+                DispatchQueue.main.async {
+                    self?.usersTableView.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    
+        addNavBarImage()
         
         setupSearchBar()
-        
         
         
         
@@ -50,6 +63,8 @@ final class SearchUsersViewController: UIViewController {
         
         navigationController?.navigationBar.barTintColor = .backgroundDarkGray
         
+
+
     }
     
     override func viewDidLayoutSubviews() {
@@ -58,18 +73,18 @@ final class SearchUsersViewController: UIViewController {
     }
     
     
-//    private func addNavBarImage() {
-//        let navController = navigationController!
-//        let image = UIImage(named: "title")
-//        let imageView = UIImageView(image: image)
-//        let bannerWidth = navController.navigationBar.frame.size.width
-//        let bannerHeight = navController.navigationBar.frame.size.height
-//        let bannerX = bannerWidth / 2 - (image?.size.width)! / 2
-//        let bannerY = bannerHeight / 2 - (image?.size.height)! / 2
-//        imageView.frame = CGRect(x: bannerX, y: bannerY, width: bannerWidth, height: bannerHeight)
-//        imageView.contentMode = .scaleAspectFit
-//        navigationItem.titleView = imageView
-//    }
+    private func addNavBarImage() {
+        let navController = navigationController!
+        let image = UIImage(named: "title")
+        let imageView = UIImageView(image: image)
+        let bannerWidth = navController.navigationBar.frame.size.width
+        let bannerHeight = navController.navigationBar.frame.size.height
+        let bannerX = bannerWidth / 2 - (image?.size.width)! / 2
+        let bannerY = bannerHeight / 2 - (image?.size.height)! / 2
+        imageView.frame = CGRect(x: bannerX, y: bannerY, width: bannerWidth, height: bannerHeight)
+        imageView.contentMode = .scaleAspectFit
+        navigationItem.titleView = imageView
+    }
     
     private func setupSearchBar() {
         definesPresentationContext = true
@@ -79,18 +94,25 @@ final class SearchUsersViewController: UIViewController {
         self.searchController.searchBar.delegate = self
     }
     
+
     
 
 }
 
 extension SearchUsersViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        20
+        self.users.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.cellId, for: indexPath) as? UserTableViewCell else { return UITableViewCell() }
-
+        
+        
+        
+        cell.nameLabel.text = self.users[indexPath.row].login
+        let imageURL = URL(string: self.users[indexPath.row].avatar_url)
+        cell.avatarImage.kf.setImage(with: imageURL)
+        
         
         return cell
     }
@@ -108,5 +130,5 @@ extension SearchUsersViewController: UITableViewDelegate {
 }
 
 extension SearchUsersViewController: UISearchBarDelegate {
-    
+
 }

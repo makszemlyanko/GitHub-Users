@@ -8,7 +8,6 @@
 import UIKit
 
 final class UserDetailViewController: UIViewController {
-
     
     private let followers: UILabel = {
        let label = UILabel()
@@ -114,6 +113,7 @@ final class UserDetailViewController: UIViewController {
        let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
+        stackView.spacing = 8
         stackView.alignment = .center
         stackView.distribution = .fillEqually
         return stackView

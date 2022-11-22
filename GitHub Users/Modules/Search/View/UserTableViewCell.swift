@@ -11,7 +11,7 @@ final class UserTableViewCell: UITableViewCell {
     
     static let cellId = "UserTableViewCell"
     
-    private let nameLabel: UILabel = {
+    var nameLabel: UILabel = {
        let label = UILabel()
         label.text = "User Name"
         label.textColor = .white
@@ -42,7 +42,7 @@ final class UserTableViewCell: UITableViewCell {
         return image
     }()
     
-    private let avatarImage: UIImageView = {
+    var avatarImage: UIImageView = {
        let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
 //        image.backgroundColor = .accentGreen
