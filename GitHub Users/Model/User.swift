@@ -7,8 +7,23 @@
 
 import Foundation
 
-struct User: Decodable {
+struct User {
     let login: String
     let id: Int
-    let avatar_url: String
+    let avatarURL: String
+}
+
+extension User: Decodable {
+    enum UserCodingKeys: String, CodingKey {
+        case login
+        case id
+        case avatarURL = "avatar_url"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: UserCodingKeys.self)
+        login = try container.decode(String.self, forKey: .login)
+        id = try container.decode(Int.self, forKey: .id)
+        avatarURL = try container.decode(String.self, forKey: .avatarURL)
+    }
 }

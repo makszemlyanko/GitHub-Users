@@ -19,17 +19,18 @@ final class APICaller {
     func getListOfAllUsers(searchOffset: Int = 0, completion: @escaping (Result<[User], Error>) -> Void) {
         guard let url = URL(string: Constants.listOfAllUsersURL) else {return}
         let parameters = ["per_page": 30, "since": searchOffset]
-        AF.request(url, method: .get, parameters: parameters).responseData { response in
-            guard response.error == nil, let response = response.data else { return }
-            do {
-                let results = try JSONDecoder().decode([User].self, from: response)
-                completion(.success(results))
-            } catch let error {
-                completion(.failure(error))
-            }
+        AF.request(url, method: .get, parameters: parameters).validate().responseDecodable(of: [User].self) { response in
+            guard let data = response.value, response.error == nil else { return completion(.failure(response.error!)) }
+            completion(.success(data))
         }
     }
-
+    
+    func getUserFromSearch(userName: String, completion: @escaping (Result<User, Error>) -> Void) {
+        let urlString = Constants.listOfAllUsersURL + "/\(userName)"
+        guard let url = URL(string: urlString) else { return }
+        AF.request(url, method: .get).validate().responseDecodable(of: User.self) { response in
+            guard let data = response.value, response.error == nil else { return completion(.failure(response.error!)) }
+            completion(.success(data))
+        }
+    }
 }
-
-

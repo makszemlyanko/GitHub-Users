@@ -6,8 +6,18 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class UserDetailViewController: UIViewController {
+    
+    var user: User? {
+        didSet {
+            guard let imageURL = URL(string: self.user?.avatarURL ?? "") else { return }
+            DispatchQueue.main.async {
+                self.avatarImage.kf.setImage(with: imageURL)
+            }
+        }
+    }
     
     private let followers: UILabel = {
        let label = UILabel()
@@ -119,7 +129,7 @@ final class UserDetailViewController: UIViewController {
         return stackView
     }()
     
-    private let avatarImage: UIImageView = {
+    private var avatarImage: UIImageView = {
        let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(named: "blankAva")
