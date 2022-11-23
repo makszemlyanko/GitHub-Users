@@ -10,12 +10,22 @@ import Kingfisher
 
 final class UserDetailViewController: UIViewController {
     
-    var user: User? {
+    var userSearchName: String?
+
+    private var userDetail: UserDetail! {
         didSet {
-            guard let imageURL = URL(string: self.user?.avatarURL ?? "") else { return }
+            guard let imageURL = URL(string: self.userDetail.avatarURL) else { return }
             DispatchQueue.main.async {
                 self.avatarImage.kf.setImage(with: imageURL)
+                self.userName.text = self.userDetail.name
+                self.login.text = self.userDetail.login
+                self.email.text = self.userDetail.location ?? "no email"
+                self.comanyName.text = self.userDetail.company ?? "no company"
+                self.followers.text = "Followers: \(String(self.userDetail.followers))"
+                self.following.text = "Following: \(String(self.userDetail.following))"
+                self.registrationDate.text = self.userDetail.createdAt
             }
+         
         }
     }
     
@@ -48,7 +58,7 @@ final class UserDetailViewController: UIViewController {
     
     private let emailimage: UIImageView = {
        let image = UIImageView()
-        image.image = UIImage(systemName: "envelope")
+        image.image = UIImage(systemName: "location")
         image.contentMode = .scaleAspectFit
         image.tintColor = .accentGreen
         return image
@@ -96,7 +106,6 @@ final class UserDetailViewController: UIViewController {
        let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-//        stackView.spacing = 4
         stackView.alignment = .leading
         return stackView
     }()
@@ -111,7 +120,7 @@ final class UserDetailViewController: UIViewController {
         return label
     }()
     
-    private let subtitle: UILabel = {
+    private let login: UILabel = {
         let label = UILabel()
         label.text = "Subtitle Label"
         label.textColor = .white
@@ -129,10 +138,9 @@ final class UserDetailViewController: UIViewController {
         return stackView
     }()
     
-    private var avatarImage: UIImageView = {
+    private let avatarImage: UIImageView = {
        let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.image = UIImage(named: "blankAva")
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         image.layer.cornerRadius = 60
@@ -168,6 +176,20 @@ final class UserDetailViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundDarkGray
         setupCardView()
+        
+        
+        getDetailUserInfo()
+    }
+    
+    func getDetailUserInfo() {
+        APICaller.shared.getUserDetail(userName: userSearchName ?? "") { [weak self] result in
+            switch result {
+            case .success(let user):
+                self?.userDetail = user
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
     
     
@@ -178,7 +200,7 @@ final class UserDetailViewController: UIViewController {
         userCardView.addSubview(avatarImage)
         
         titleStackView.addArrangedSubview(userName)
-        titleStackView.addArrangedSubview(subtitle)
+        titleStackView.addArrangedSubview(login)
         
         userCardView.addSubview(titleStackView)
         userCardView.addSubview(registrationDate)
@@ -198,7 +220,7 @@ final class UserDetailViewController: UIViewController {
         
         titleStackView.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
         titleStackView.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: 24).isActive = true
-        titleStackView.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        titleStackView.widthAnchor.constraint(equalToConstant: 300).isActive = true
         titleStackView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
         
@@ -240,7 +262,7 @@ final class UserDetailViewController: UIViewController {
         followersStackView.widthAnchor.constraint(equalToConstant: 260).isActive = true
         followersStackView.heightAnchor.constraint(equalToConstant: 24).isActive = true
         followersStackView.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
-        followersStackView.topAnchor.constraint(equalTo: contacktsStackView.bottomAnchor, constant: 16).isActive = true
+        followersStackView.topAnchor.constraint(equalTo: contacktsStackView.bottomAnchor, constant: 24).isActive = true
         
     }
 }

@@ -43,7 +43,9 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     
     @objc func pullToRefreshList(sender: UIRefreshControl) {
         print("refreshing")
-//        getAllUsersList()
+        
+        #warning("need random shuffled users")
+        
         sender.endRefreshing()
     }
 
@@ -157,26 +159,26 @@ extension SearchUsersViewController: UITableViewDataSource {
         
         
         // pagination
-//        self.usersTableView.tableFooterView = createSpinnerForFooter()
+        self.usersTableView.tableFooterView = createSpinnerForFooter()
         
-//
-//        if indexPath.row == users.count - 1 && !isPaginating {
-//            self.isPaginating = true
-//            APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { response in
-//                switch response {
-//                case .success(let nextUsersPage):
-//                    self.users += nextUsersPage
-//                    self.searchOffset += 30
-//                    DispatchQueue.main.async {
-//                        self.usersTableView.reloadData()
-//                    }
-//                    self.isPaginating = false
-//                case .failure(let error):
-//                    print(error.localizedDescription)
-//                }
-//
-//            }
-//        }
+
+        if indexPath.row == users.count - 1 && !isPaginating {
+            self.isPaginating = true
+            APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { response in
+                switch response {
+                case .success(let nextUsersPage):
+                    self.users += nextUsersPage
+                    self.searchOffset += 30
+                    DispatchQueue.main.async {
+                        self.usersTableView.reloadData()
+                    }
+                    self.isPaginating = false
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+
+            }
+        }
         
         
         return cell
@@ -190,29 +192,33 @@ extension SearchUsersViewController: UITableViewDataSource {
 extension SearchUsersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = UserDetailViewController()
-        let user = self.users[indexPath.row]
-        detailVC.user = user
+        let userName = users[indexPath.row].login
+        detailVC.userSearchName = userName
+        
         navigationController?.pushViewController(detailVC, animated: true)
     }
+    
+    
+
 }
 
 extension SearchUsersViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { _ in
-            APICaller.shared.getUserFromSearch(userName: searchText) { [weak self] result in
-                switch result {
-                case .success(let user):
-                    self?.users = []
-                    self?.users.append(user)
-                    DispatchQueue.main.async {
-                        self?.usersTableView.reloadData()
-                    }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        })
-    }
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        timer?.invalidate()
+//        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { _ in
+//            APICaller.shared.getUserFromSearch(userName: searchText) { [weak self] result in
+//                switch result {
+//                case .success(let user):
+//                    self?.users = []
+//                    self?.users.append(user)
+//                    DispatchQueue.main.async {
+//                        self?.usersTableView.reloadData()
+//                    }
+//                case .failure(let error):
+//                    print(error.localizedDescription)
+//                }
+//            }
+//        })
+//    }
 }
  

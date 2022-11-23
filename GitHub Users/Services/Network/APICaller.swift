@@ -25,10 +25,19 @@ final class APICaller {
         }
     }
     
-    func getUserFromSearch(userName: String, completion: @escaping (Result<User, Error>) -> Void) {
+//    func getUserFromSearch(userName: String, completion: @escaping (Result<User, Error>) -> Void) {
+//        let urlString = Constants.listOfAllUsersURL + "/\(userName)"
+//        guard let url = URL(string: urlString) else { return }
+//        AF.request(url, method: .get).validate().responseDecodable(of: User.self) { response in
+//            guard let data = response.value, response.error == nil else { return completion(.failure(response.error!)) }
+//            completion(.success(data))
+//        }
+//    }
+//
+    func getUserDetail(userName: String, completion: @escaping (Result<UserDetail, Error>) -> Void) {
         let urlString = Constants.listOfAllUsersURL + "/\(userName)"
         guard let url = URL(string: urlString) else { return }
-        AF.request(url, method: .get).validate().responseDecodable(of: User.self) { response in
+        AF.request(url, method: .get).validate().responseDecodable(of: UserDetail.self) { response in
             guard let data = response.value, response.error == nil else { return completion(.failure(response.error!)) }
             completion(.success(data))
         }
