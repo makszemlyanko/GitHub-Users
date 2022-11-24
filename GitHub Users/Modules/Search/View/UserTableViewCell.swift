@@ -11,17 +11,19 @@ final class UserTableViewCell: UITableViewCell {
     
     static let cellId = "UserTableViewCell"
     
-    var nameLabel: UILabel = {
+    var loginLabel: UILabel = {
        let label = UILabel()
         label.text = "User Name"
         label.textColor = .white
+        label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
     }()
     
     var idLabel: UILabel = {
         let label = UILabel()
         label.text = "Subtitle Label"
-        label.textColor = .white
+        label.textColor = .systemGray
+        label.font = .systemFont(ofSize: 14, weight: .bold)
         return label
     }()
     
@@ -45,8 +47,6 @@ final class UserTableViewCell: UITableViewCell {
     var avatarImage: UIImageView = {
        let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-//        image.backgroundColor = .accentGreen
-        image.image = UIImage(named: "blankAva")
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         image.layer.cornerRadius = 35
@@ -75,11 +75,10 @@ final class UserTableViewCell: UITableViewCell {
         addSubview(cellView)
         cellView.addSubview(avatarImage)
         cellView.addSubview(infoImage)
-        cellView.addSubview(nameLabel)
-        stackView.addArrangedSubview(nameLabel)
+        cellView.addSubview(loginLabel)
+        stackView.addArrangedSubview(loginLabel)
         stackView.addArrangedSubview(idLabel)
         cellView.addSubview(stackView)
-        //        self.selectionStyle = .none
         
         NSLayoutConstraint.activate([
             cellView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
@@ -97,7 +96,7 @@ final class UserTableViewCell: UITableViewCell {
         infoImage.widthAnchor.constraint(equalToConstant: 24).isActive = true
         infoImage.heightAnchor.constraint(equalToConstant: 24).isActive = true
         infoImage.centerYAnchor.constraint(equalTo: cellView.centerYAnchor).isActive = true
-        infoImage.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -18).isActive = true
+        infoImage.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -24).isActive = true
         
         stackView.centerYAnchor.constraint(equalTo: cellView.centerYAnchor).isActive = true
         stackView.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: 18).isActive = true

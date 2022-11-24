@@ -11,13 +11,15 @@ import Kingfisher
 final class SearchUsersViewController: UIViewController, UISearchControllerDelegate {
     
     private var searchOffset = 0
-    private var isPaginating = false
-    
-    private var timer: Timer?
+    private var fetchMoreUsers = false
+
+    #warning("remove nav bar")
     
     private lazy var refreshControl: UIRefreshControl = {
         let rc = UIRefreshControl()
         rc.tintColor = .accentGreen
+        let attributes = [NSAttributedString.Key.foregroundColor: UIColor.accentGreen]
+        rc.attributedTitle = NSAttributedString(string: "Refreshing", attributes: attributes)
         rc.addTarget(self, action: #selector(pullToRefreshList), for: .valueChanged)
         return rc
     }()
@@ -33,8 +35,8 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     }()
     
     private let searchController: UISearchController = {
-        let controller = UISearchController(searchResultsController: nil)
-        controller.searchBar.placeholder = "Search Users"
+        let controller = UISearchController(searchResultsController: SearchResultViewController())
+        controller.searchBar.placeholder = "Search user by login"
         controller.searchBar.barStyle = .black
         controller.searchBar.searchTextField.leftView?.tintColor = .accentGreen
         controller.searchBar.searchBarStyle = .minimal
@@ -42,10 +44,11 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     }()
     
     @objc func pullToRefreshList(sender: UIRefreshControl) {
-        print("refreshing")
-        
-        #warning("need random shuffled users")
-        
+        self.users.shuffle()
+        DispatchQueue.main.async {
+            self.usersTableView.reloadData()
+        }
+        self.usersTableView.reloadData()
         sender.endRefreshing()
     }
 
@@ -57,12 +60,14 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
         
         getAllUsersList()
    
-    
+        
+        
+        
+        searchController.searchResultsUpdater = self
         
         
         self.usersTableView.refreshControl = self.refreshControl
 
-        addNavBarImage()
 
         
         setupSearchBar()
@@ -79,18 +84,17 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
         navigationController?.navigationBar.barTintColor = .backgroundDarkGray
     }
     
-
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         usersTableView.frame = view.bounds
     }
     
     private func getAllUsersList() {
-        APICaller.shared.getListOfAllUsers { [weak self] response in
+        APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { [weak self] response in
             switch response {
             case .success(let results):
                 self?.users = results
+                self?.searchOffset = results.last?.id ?? 0
                 DispatchQueue.main.async {
                     self?.usersTableView.reloadData()
                 }
@@ -103,25 +107,14 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     
     private func setupSearchBar() {
         definesPresentationContext = true
+        navigationItem.title = "All Users"
         navigationItem.searchController = self.searchController
-        navigationItem.hidesSearchBarWhenScrolling = true
+        navigationItem.hidesSearchBarWhenScrolling = false
         self.searchController.obscuresBackgroundDuringPresentation = false
-        self.searchController.searchBar.delegate = self
     }
     
     
-    private func addNavBarImage() {
-        let navController = navigationController!
-        let image = UIImage(named: "title")
-        let imageView = UIImageView(image: image)
-        let bannerWidth = navController.navigationBar.frame.size.width
-        let bannerHeight = navController.navigationBar.frame.size.height
-        let bannerX = bannerWidth / 2 - (image?.size.width)! / 2
-        let bannerY = bannerHeight / 2 - (image?.size.height)! / 2
-        imageView.frame = CGRect(x: bannerX, y: bannerY, width: bannerWidth, height: bannerHeight)
-        imageView.contentMode = .scaleAspectFit
-        navigationItem.titleView = imageView
-    }
+
     
     private func createSpinnerForFooter() -> UIView {
         let footerView = UIView(frame: .init(x: 0, y: 0, width: view.frame.width, height: 120))
@@ -148,39 +141,10 @@ extension SearchUsersViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.cellId, for: indexPath) as? UserTableViewCell else { return UITableViewCell() }
-        
-        
-        
-        cell.nameLabel.text = self.users[indexPath.row].login
+        cell.loginLabel.text = self.users[indexPath.row].login
         cell.idLabel.text = "Id: \(self.users[indexPath.row].id)"
         let imageURL = URL(string: self.users[indexPath.row].avatarURL)
         cell.avatarImage.kf.setImage(with: imageURL)
-        
-        
-        
-        // pagination
-        self.usersTableView.tableFooterView = createSpinnerForFooter()
-        
-
-        if indexPath.row == users.count - 1 && !isPaginating {
-            self.isPaginating = true
-            APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { response in
-                switch response {
-                case .success(let nextUsersPage):
-                    self.users += nextUsersPage
-                    self.searchOffset += 30
-                    DispatchQueue.main.async {
-                        self.usersTableView.reloadData()
-                    }
-                    self.isPaginating = false
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-
-            }
-        }
-        
-        
         return cell
     }
     
@@ -194,31 +158,69 @@ extension SearchUsersViewController: UITableViewDelegate {
         let detailVC = UserDetailViewController()
         let userName = users[indexPath.row].login
         detailVC.userSearchName = userName
-        
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
-    
-
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        if offsetY > contentHeight - scrollView.frame.height {
+            if !self.fetchMoreUsers {
+                self.fetchMoreUsers = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.usersTableView.tableFooterView = self.createSpinnerForFooter()
+                    APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { [weak self] response in
+                        switch response {
+                        case .success(let nextUsersPage):
+                            self?.users += nextUsersPage
+                            self?.searchOffset = nextUsersPage.last?.id ?? 30
+                            self?.fetchMoreUsers = false
+                            self?.usersTableView.reloadData()
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
 }
 
-extension SearchUsersViewController: UISearchBarDelegate {
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        timer?.invalidate()
-//        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { _ in
-//            APICaller.shared.getUserFromSearch(userName: searchText) { [weak self] result in
-//                switch result {
-//                case .success(let user):
-//                    self?.users = []
-//                    self?.users.append(user)
-//                    DispatchQueue.main.async {
-//                        self?.usersTableView.reloadData()
-//                    }
-//                case .failure(let error):
-//                    print(error.localizedDescription)
-//                }
-//            }
-//        })
-//    }
+extension SearchUsersViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchBar = searchController.searchBar
+       guard let searchQuery = searchBar.text,
+              !searchQuery.trimmingCharacters(in: .whitespaces).isEmpty,
+              searchQuery.trimmingCharacters(in: .whitespaces).count >= 3,
+              let searchResultController = searchController.searchResultsController as? SearchResultViewController else { return }
+        
+        
+//        searchResultController.delegate = self
+        
+        APICaller.shared.getUserFromSearch(userName: searchQuery) { result in
+            switch result {
+            case .success(let user):
+                searchResultController.users.removeAll()
+                searchResultController.users.insert(user, at: 0)
+                DispatchQueue.main.async {
+                    searchResultController.searchUserTableView.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+        
+    }
+    
+    
+}
+
+extension SearchUsersViewController: SearchResultViewControllerDelegate {
+
+    
+
+    
+    
 }
  

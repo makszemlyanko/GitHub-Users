@@ -75,7 +75,7 @@ final class UserDetailViewController: UIViewController {
     private let emailStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = 8
+        stackView.spacing = 12
         return stackView
     }()
     
