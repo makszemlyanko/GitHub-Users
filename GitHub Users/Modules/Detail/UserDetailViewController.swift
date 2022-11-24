@@ -9,6 +9,7 @@ import UIKit
 import Kingfisher
 
 final class UserDetailViewController: UIViewController {
+    #warning("check layout, have some issues (search: google)")
     
     var userSearchName: String?
 
@@ -17,15 +18,14 @@ final class UserDetailViewController: UIViewController {
             guard let imageURL = URL(string: self.userDetail.avatarURL) else { return }
             DispatchQueue.main.async {
                 self.avatarImage.kf.setImage(with: imageURL)
-                self.userName.text = self.userDetail.name
-                self.login.text = self.userDetail.login
+                self.userNameLabel.text = self.userDetail.name
+                self.userLoginLabel.text = self.userDetail.login
                 self.email.text = self.userDetail.location ?? "no email"
                 self.comanyName.text = self.userDetail.company ?? "no company"
                 self.followers.text = "Followers: \(String(self.userDetail.followers))"
                 self.following.text = "Following: \(String(self.userDetail.following))"
                 self.registrationDate.text = self.userDetail.createdAt
             }
-         
         }
     }
     
@@ -112,17 +112,21 @@ final class UserDetailViewController: UIViewController {
     
     
     
-    private let userName: UILabel = {
+    private let userNameLabel: UILabel = {
        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "User Name"
+        label.textAlignment = .center
         label.textColor = .white
         label.font = .boldSystemFont(ofSize: 24)
         return label
     }()
     
-    private let login: UILabel = {
+    private let userLoginLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Subtitle Label"
+        label.textAlignment = .center
         label.textColor = .white
         label.font = .boldSystemFont(ofSize: 18)
         return label
@@ -142,6 +146,7 @@ final class UserDetailViewController: UIViewController {
        let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFill
+        image.image = UIImage(named: "blankAva")
         image.clipsToBounds = true
         image.layer.cornerRadius = 60
         return image
@@ -175,9 +180,7 @@ final class UserDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundDarkGray
-        setupCardView()
-        
-        
+        configureLayout()
         getDetailUserInfo()
     }
     
@@ -193,76 +196,70 @@ final class UserDetailViewController: UIViewController {
     }
     
     
-    func setupCardView() {
+    
+    // NEW LAYOUT down below
+    
+    func setupUserCardView() {
         view.addSubview(userCardView)
-        view.addSubview(gitHubBottomImage)
-        
-        userCardView.addSubview(avatarImage)
-        
-        titleStackView.addArrangedSubview(userName)
-        titleStackView.addArrangedSubview(login)
-        
-        userCardView.addSubview(titleStackView)
-        userCardView.addSubview(registrationDate)
-        
-        
         NSLayoutConstraint.activate([
             userCardView.topAnchor.constraint(equalTo: view.topAnchor, constant: 126),
             userCardView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             userCardView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             userCardView.heightAnchor.constraint(equalToConstant: 420)
         ])
-        
-        avatarImage.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        avatarImage.heightAnchor.constraint(equalToConstant: 120).isActive = true
-        avatarImage.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
-        avatarImage.topAnchor.constraint(equalTo: userCardView.topAnchor, constant: 40).isActive = true
-        
-        titleStackView.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
-        titleStackView.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: 24).isActive = true
-        titleStackView.widthAnchor.constraint(equalToConstant: 300).isActive = true
-        titleStackView.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
-        
-        registrationDate.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
-        registrationDate.bottomAnchor.constraint(equalTo: userCardView.bottomAnchor, constant: -8).isActive = true
-        registrationDate.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        registrationDate.heightAnchor.constraint(equalToConstant: 22).isActive = true
-        
-        gitHubBottomImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -58).isActive = true
-        gitHubBottomImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        gitHubBottomImage.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        gitHubBottomImage.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
-        emailStackView.addArrangedSubview(emailimage)
-        emailStackView.addArrangedSubview(email)
-        
-        companyStackView.addArrangedSubview(companyImage)
-        companyStackView.addArrangedSubview(comanyName)
-        
-        contacktsStackView.addArrangedSubview(emailStackView)
-        contacktsStackView.addArrangedSubview(companyStackView)
-        
-        userCardView.addSubview(contacktsStackView)
-        
-        
-        contacktsStackView.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: 16).isActive = true
-        contacktsStackView.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
-        contacktsStackView.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        contacktsStackView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        
-        
-        followersStackView.addArrangedSubview(followers)
-        followersStackView.addArrangedSubview(following)
-        
-        userCardView.addSubview(followersStackView)
-        
-        
-        followersStackView.widthAnchor.constraint(equalToConstant: 260).isActive = true
-        followersStackView.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        followersStackView.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor).isActive = true
-        followersStackView.topAnchor.constraint(equalTo: contacktsStackView.bottomAnchor, constant: 24).isActive = true
-        
     }
+    
+    private func setupUserImage() {
+        userCardView.addSubview(avatarImage)
+        NSLayoutConstraint.activate([
+            avatarImage.widthAnchor.constraint(equalToConstant: 120),
+            avatarImage.heightAnchor.constraint(equalToConstant: 120),
+            avatarImage.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor),
+            avatarImage.topAnchor.constraint(equalTo: userCardView.topAnchor, constant: 40)
+        ])
+    }
+    
+    private func setupUserName() {
+        userCardView.addSubview(userNameLabel)
+        NSLayoutConstraint.activate([
+            userNameLabel.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: 24),
+            userNameLabel.leadingAnchor.constraint(equalTo: userCardView.leadingAnchor, constant: 20),
+            userNameLabel.trailingAnchor.constraint(equalTo: userCardView.trailingAnchor, constant: -20),
+            userNameLabel.heightAnchor.constraint(equalToConstant: 20)
+        ])
+    }
+    
+    private func setupLoginLabel() {
+        userCardView.addSubview(userLoginLabel)
+        NSLayoutConstraint.activate([
+            userLoginLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 10),
+            userLoginLabel.leadingAnchor.constraint(equalTo: userCardView.leadingAnchor, constant: 20),
+            userLoginLabel.trailingAnchor.constraint(equalTo: userCardView.trailingAnchor, constant: -20),
+            userLoginLabel.heightAnchor.constraint(equalToConstant: 20)
+        ])
+    }
+    
+    private func setupRegistrationDate() {
+        #warning("date formatter")
+        userCardView.addSubview(registrationDate)
+        NSLayoutConstraint.activate([
+            registrationDate.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor),
+            registrationDate.bottomAnchor.constraint(equalTo: userCardView.bottomAnchor, constant: -8),
+            registrationDate.widthAnchor.constraint(equalToConstant: 200),
+            registrationDate.heightAnchor.constraint(equalToConstant: 22)
+        ])
+    }
+    
+    private func configureLayout() {
+        setupUserCardView()
+        setupUserImage()
+        setupUserName()
+        setupLoginLabel()
+        
+        
+        
+        
+        setupRegistrationDate()
+    }
+    
 }

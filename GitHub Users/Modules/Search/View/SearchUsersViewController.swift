@@ -12,8 +12,6 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     
     private var searchOffset = 0
     private var fetchMoreUsers = false
-
-    #warning("remove nav bar")
     
     private lazy var refreshControl: UIRefreshControl = {
         let rc = UIRefreshControl()
@@ -29,7 +27,7 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     
     private let usersTableView: UITableView = {
         let table = UITableView()
-        table.backgroundColor = UIColor.backgroundDarkGray
+        table.backgroundColor = .backgroundDarkGray
         table.register(UserTableViewCell.self, forCellReuseIdentifier: UserTableViewCell.cellId)
         return table
     }()
@@ -44,50 +42,35 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     }()
     
     @objc func pullToRefreshList(sender: UIRefreshControl) {
-        self.users.shuffle()
-        DispatchQueue.main.async {
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+            self.users.shuffle()
             self.usersTableView.reloadData()
-        }
-        self.usersTableView.reloadData()
+        })
         sender.endRefreshing()
     }
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
-        
         getAllUsersList()
-   
-        
-        
-        
         searchController.searchResultsUpdater = self
-        
-        
         self.usersTableView.refreshControl = self.refreshControl
-
-
-        
         setupSearchBar()
-        
         view.addSubview(usersTableView)
         usersTableView.dataSource = self
         usersTableView.delegate = self
-        
-
-        
         navigationItem.searchController = self.searchController
         navigationController?.navigationBar.tintColor = .accentGreen
-        
-        navigationController?.navigationBar.barTintColor = .backgroundDarkGray
     }
     
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         usersTableView.frame = view.bounds
     }
+    
+
     
     private func getAllUsersList() {
         APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { [weak self] response in
@@ -107,9 +90,9 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     
     private func setupSearchBar() {
         definesPresentationContext = true
-        navigationItem.title = "All Users"
+        navigationItem.title = "Users"
         navigationItem.searchController = self.searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.hidesSearchBarWhenScrolling = true
         self.searchController.obscuresBackgroundDuringPresentation = false
     }
     
@@ -179,7 +162,6 @@ extension SearchUsersViewController: UITableViewDelegate {
                         case .failure(let error):
                             print(error.localizedDescription)
                         }
-                        
                     }
                 }
             }
@@ -195,8 +177,7 @@ extension SearchUsersViewController: UISearchResultsUpdating {
               searchQuery.trimmingCharacters(in: .whitespaces).count >= 3,
               let searchResultController = searchController.searchResultsController as? SearchResultViewController else { return }
         
-        
-//        searchResultController.delegate = self
+        searchResultController.delegate = self
         
         APICaller.shared.getUserFromSearch(userName: searchQuery) { result in
             switch result {
@@ -208,6 +189,7 @@ extension SearchUsersViewController: UISearchResultsUpdating {
                 }
             case .failure(let error):
                 print(error.localizedDescription)
+                // nothing found
             }
         }
         
@@ -217,10 +199,10 @@ extension SearchUsersViewController: UISearchResultsUpdating {
 }
 
 extension SearchUsersViewController: SearchResultViewControllerDelegate {
-
-    
-
-    
-    
+    func showUserDetail(userName: String) {
+        let detailVC = UserDetailViewController()
+        detailVC.userSearchName = userName
+        navigationController?.pushViewController(detailVC, animated: true)
+    } 
 }
  

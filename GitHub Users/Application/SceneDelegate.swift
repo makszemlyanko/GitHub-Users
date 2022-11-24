@@ -24,9 +24,16 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
         let navController = UINavigationController(rootViewController: rootViewController)
-
         
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .backgroundDarkGray
+        appearance.shadowColor = .clear
+        appearance.shadowImage = UIImage()
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.accentGreen]
         
+        navController.navigationBar.standardAppearance = appearance;
+        navController.navigationBar.scrollEdgeAppearance = navController.navigationBar.standardAppearance
         
         
         

@@ -8,12 +8,12 @@
 import UIKit
 
 protocol SearchResultViewControllerDelegate: AnyObject {
-    
+    func showUserDetail(userName: String)
 }
 
 final class SearchResultViewController: UIViewController {
     
-//    weak var delegate: SearchResultViewControllerDelegate?
+    weak var delegate: SearchResultViewControllerDelegate?
     
     var users = [User]()
     
@@ -26,6 +26,8 @@ final class SearchResultViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         
         view.addSubview(searchUserTableView)
         searchUserTableView.dataSource = self
@@ -58,10 +60,8 @@ extension SearchResultViewController: UITableViewDataSource {
 }
 
 extension SearchResultViewController: UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let detailVC = UserDetailViewController()
-//        let userName = users[indexPath.row].login
-//        detailVC.userSearchName = userName
-//        navigationController?.pushViewController(detailVC, animated: true)
-//    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let userName = users[indexPath.row].login
+        delegate?.showUserDetail(userName: userName)
+    }
 }
