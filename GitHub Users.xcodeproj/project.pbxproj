@@ -55,12 +55,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		15812E8A292CC3650045C46F /* Services */ = {
+		15812E8A292CC3650045C46F /* Service */ = {
 			isa = PBXGroup;
 			children = (
 				15812E8B292CC3870045C46F /* Network */,
 			);
-			path = Services;
+			path = Service;
 			sourceTree = "<group>";
 		};
 		15812E8B292CC3870045C46F /* Network */ = {
@@ -100,9 +100,9 @@
 			isa = PBXGroup;
 			children = (
 				15812E8D292CC3910045C46F /* Model */,
-				15812E8A292CC3650045C46F /* Services */,
+				15812E8A292CC3650045C46F /* Service */,
 				15F6B5122927B159003F4AA8 /* Extensions */,
-				15F6B50B2927B0EB003F4AA8 /* Modules */,
+				15F6B50B2927B0EB003F4AA8 /* Module */,
 				15F6B5072927ACA5003F4AA8 /* Application */,
 				15F6B5002927AB4F003F4AA8 /* Supporting files */,
 			);
@@ -128,13 +128,13 @@
 			path = Application;
 			sourceTree = "<group>";
 		};
-		15F6B50B2927B0EB003F4AA8 /* Modules */ = {
+		15F6B50B2927B0EB003F4AA8 /* Module */ = {
 			isa = PBXGroup;
 			children = (
 				15F6B50D2927B102003F4AA8 /* Detail */,
 				15F6B50C2927B0FA003F4AA8 /* Search */,
 			);
-			path = Modules;
+			path = Module;
 			sourceTree = "<group>";
 		};
 		15F6B50C2927B0FA003F4AA8 /* Search */ = {

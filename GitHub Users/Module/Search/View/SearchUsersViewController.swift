@@ -10,6 +10,30 @@ import Kingfisher
 
 final class SearchUsersViewController: UIViewController, UISearchControllerDelegate {
     
+    
+ 
+    private let floatingUpButton: UIButton = {
+        let button = UIButton(frame: .init(x: 0, y: 0, width: 60, height: 60))
+        button.layer.cornerRadius = 22
+        button.backgroundColor = .accentGreen
+        button.layer.shadowRadius = 10
+        button.layer.shadowOpacity = 0.5
+        let image = UIImage(systemName: "arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
+        button.setImage(image, for: .normal)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(didTapUpButton), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func didTapUpButton() {
+        let indexPath = IndexPath(row: 0, section: 0)
+        usersTableView.scrollToRow(at: indexPath, at: .top, animated: true)
+    }
+    
+    
+    
+    
+    //////////////////
     private var searchOffset = 0
     private var fetchMoreUsers = false
     
@@ -53,15 +77,28 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        
         getAllUsersList()
+        
+        
         searchController.searchResultsUpdater = self
         self.usersTableView.refreshControl = self.refreshControl
         setupSearchBar()
         view.addSubview(usersTableView)
+        
+        
+        
         usersTableView.dataSource = self
         usersTableView.delegate = self
         navigationItem.searchController = self.searchController
         navigationController?.navigationBar.tintColor = .accentGreen
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        floatingUpButton.frame = CGRect(x: view.frame.size.width - 70, y: view.frame.size.height - 70, width: 44, height: 44)
     }
     
 
@@ -147,6 +184,11 @@ extension SearchUsersViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
+        if offsetY <= -92 {
+            floatingUpButton.removeFromSuperview()
+        } else {
+            view.addSubview(floatingUpButton)
+        }
         if offsetY > contentHeight - scrollView.frame.height {
             if !self.fetchMoreUsers {
                 self.fetchMoreUsers = true

@@ -112,7 +112,7 @@ final class UserDetailViewController: UIViewController {
        let label = UILabel()
         label.textAlignment = .center
         label.textColor = .white
-        label.font = .boldSystemFont(ofSize: 24)
+        label.font = .boldSystemFont(ofSize: 22)
         return label
     }()
     
@@ -204,7 +204,7 @@ final class UserDetailViewController: UIViewController {
             userNameLabel.topAnchor.constraint(equalTo: userAvatar.bottomAnchor, constant: 24),
             userNameLabel.leadingAnchor.constraint(equalTo: userCardView.leadingAnchor, constant: 20),
             userNameLabel.trailingAnchor.constraint(equalTo: userCardView.trailingAnchor, constant: -20),
-            userNameLabel.heightAnchor.constraint(equalToConstant: 20)
+            userNameLabel.heightAnchor.constraint(equalToConstant: 24)
         ])
     }
     
@@ -212,7 +212,7 @@ final class UserDetailViewController: UIViewController {
         userCardView.addSubview(userLoginLabel)
         userLoginLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userLoginLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 8),
+            userLoginLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 6),
             userLoginLabel.leadingAnchor.constraint(equalTo: userCardView.leadingAnchor, constant: 20),
             userLoginLabel.trailingAnchor.constraint(equalTo: userCardView.trailingAnchor, constant: -20),
             userLoginLabel.heightAnchor.constraint(equalToConstant: 20)
