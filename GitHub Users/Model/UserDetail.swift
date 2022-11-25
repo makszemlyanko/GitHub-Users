@@ -17,6 +17,7 @@ struct UserDetail {
     let followers: Int
     let following: Int
     let createdAt: String
+    let htmlUrl: String
 }
 
 extension UserDetail: Decodable {
@@ -30,6 +31,7 @@ extension UserDetail: Decodable {
         case followers
         case following
         case createdAt = "created_at"
+        case htmlUrl = "html_url"
     }
     
     init(from decoder: Decoder) throws {
@@ -43,5 +45,6 @@ extension UserDetail: Decodable {
         followers = try container.decode(Int.self, forKey: .followers)
         following = try container.decode(Int.self, forKey: .following)
         createdAt = try container.decode(String.self, forKey: .createdAt)
+        htmlUrl = try container.decode(String.self, forKey: .htmlUrl)
     }
 }
