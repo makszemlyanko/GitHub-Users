@@ -175,18 +175,14 @@ final class UserDetailViewController: UIViewController {
         }
     }
     
-    
-    
-    // NEW LAYOUT down below
-    
     func setupUserCardViewConstraints() {
         view.addSubview(userCardView)
         userCardView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userCardView.topAnchor.constraint(equalTo: view.topAnchor, constant: 126),
+            userCardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
             userCardView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             userCardView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            userCardView.heightAnchor.constraint(equalToConstant: 480)
+            userCardView.heightAnchor.constraint(equalToConstant: 440)
         ])
     }
     
@@ -274,8 +270,8 @@ final class UserDetailViewController: UIViewController {
         gitHubBottomImage.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(gitHubBottomImage)
         NSLayoutConstraint.activate([
+            gitHubBottomImage.topAnchor.constraint(equalTo: userCardView.bottomAnchor, constant: 60),
             gitHubBottomImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            gitHubBottomImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -48),
             gitHubBottomImage.widthAnchor.constraint(equalToConstant: 44),
             gitHubBottomImage.heightAnchor.constraint(equalToConstant: 44)
         ])
