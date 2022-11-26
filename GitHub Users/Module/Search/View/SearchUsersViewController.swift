@@ -26,8 +26,13 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     }()
     
     @objc func didTapUpButton() {
-        let indexPath = IndexPath(row: 0, section: 0)
-        usersTableView.scrollToRow(at: indexPath, at: .top, animated: true)
+//        let indexPath = IndexPath(row: NSNotFound, section: 0)
+//        usersTableView.scrollToRow(at: indexPath, at: .top, animated: true)
+        
+            
+        let indexPath = IndexPath(row: NSNotFound, section: 0)
+        usersTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+
     }
     
     
@@ -40,6 +45,7 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     private lazy var refreshControl: UIRefreshControl = {
         let rc = UIRefreshControl()
         rc.tintColor = .accentGreen
+        rc.backgroundColor = .backgroundCustomBlack
         let attributes = [NSAttributedString.Key.foregroundColor: UIColor.accentGreen]
         rc.attributedTitle = NSAttributedString(string: "Refreshing", attributes: attributes)
         rc.addTarget(self, action: #selector(pullToRefreshList), for: .valueChanged)
@@ -58,10 +64,12 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     
     private let searchController: UISearchController = {
         let controller = UISearchController(searchResultsController: SearchResultViewController())
-        controller.searchBar.placeholder = "Search user by login"
+        controller.searchBar.placeholder = "Search by user login"
         controller.searchBar.barStyle = .black
-        controller.searchBar.searchTextField.leftView?.tintColor = .accentGreen
+        controller.searchBar.tintColor = .accentGreen
         controller.searchBar.searchBarStyle = .minimal
+        controller.searchBar.searchTextField.leftView?.tintColor = .accentGreen
+        controller.searchBar.searchTextField.textColor = .white
         return controller
     }()
     
@@ -83,7 +91,8 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
         getAllUsersList()
         
         
-        searchController.searchResultsUpdater = self
+        
+        
         self.usersTableView.refreshControl = self.refreshControl
         setupSearchBar()
         view.addSubview(usersTableView)
@@ -92,7 +101,9 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
         
         usersTableView.dataSource = self
         usersTableView.delegate = self
-        navigationItem.searchController = self.searchController
+        
+
+        
         navigationController?.navigationBar.tintColor = .accentGreen
     }
     
@@ -100,6 +111,8 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
         super.viewWillAppear(animated)
         floatingUpButton.frame = CGRect(x: view.frame.size.width - 70, y: view.frame.size.height - 70, width: 44, height: 44)
     }
+    
+
     
 
     override func viewDidLayoutSubviews() {
@@ -126,11 +139,12 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     
     
     private func setupSearchBar() {
-        definesPresentationContext = true
         navigationItem.title = "Users"
-        navigationItem.searchController = self.searchController
+        usersTableView.tableHeaderView = searchController.searchBar
         navigationItem.hidesSearchBarWhenScrolling = true
-        self.searchController.obscuresBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        self.searchController.obscuresBackgroundDuringPresentation = true
+        searchController.searchResultsUpdater = self
     }
     
     
@@ -184,11 +198,17 @@ extension SearchUsersViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
-        if offsetY <= -92 {
+        
+        
+        // floating button
+        if offsetY <= -48 {
             floatingUpButton.removeFromSuperview()
         } else {
             view.addSubview(floatingUpButton)
         }
+        
+        
+        // network
         if offsetY > contentHeight - scrollView.frame.height {
             if !self.fetchMoreUsers {
                 self.fetchMoreUsers = true
