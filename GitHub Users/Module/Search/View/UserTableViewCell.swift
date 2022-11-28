@@ -13,7 +13,6 @@ final class UserTableViewCell: UITableViewCell {
     
     var loginLabel: UILabel = {
        let label = UILabel()
-        label.text = "User Name"
         label.textColor = .white
         label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
@@ -21,7 +20,6 @@ final class UserTableViewCell: UITableViewCell {
     
     var idLabel: UILabel = {
         let label = UILabel()
-        label.text = "Subtitle Label"
         label.textColor = .systemGray
         label.font = .systemFont(ofSize: 14, weight: .bold)
         return label

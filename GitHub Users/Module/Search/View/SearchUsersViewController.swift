@@ -26,19 +26,12 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     }()
     
     @objc func didTapUpButton() {
-//        let indexPath = IndexPath(row: NSNotFound, section: 0)
-//        usersTableView.scrollToRow(at: indexPath, at: .top, animated: true)
-        
-            
         let indexPath = IndexPath(row: NSNotFound, section: 0)
         usersTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
 
     }
     
     
-    
-    
-    //////////////////
     private var searchOffset = 0
     private var fetchMoreUsers = false
     
@@ -64,7 +57,7 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     
     private let searchController: UISearchController = {
         let controller = UISearchController(searchResultsController: SearchResultViewController())
-        controller.searchBar.placeholder = "Search by user login"
+        controller.searchBar.placeholder = "Enter username"
         controller.searchBar.barStyle = .black
         controller.searchBar.tintColor = .accentGreen
         controller.searchBar.searchBarStyle = .minimal
@@ -74,7 +67,6 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     }()
     
     @objc func pullToRefreshList(sender: UIRefreshControl) {
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
             self.users.shuffle()
             self.usersTableView.reloadData()
@@ -118,6 +110,7 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         usersTableView.frame = view.bounds
+        usersTableView.separatorStyle = .none
     }
     
 
@@ -139,11 +132,10 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
     
     
     private func setupSearchBar() {
-        navigationItem.title = "Users"
-        usersTableView.tableHeaderView = searchController.searchBar
-        navigationItem.hidesSearchBarWhenScrolling = true
+        navigationItem.title = "Search"
+        navigationItem.titleView = searchController.searchBar
         definesPresentationContext = true
-        self.searchController.obscuresBackgroundDuringPresentation = true
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
     }
     
@@ -176,7 +168,7 @@ extension SearchUsersViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.cellId, for: indexPath) as? UserTableViewCell else { return UITableViewCell() }
         cell.loginLabel.text = self.users[indexPath.row].login
-        cell.idLabel.text = "Id: \(self.users[indexPath.row].id)"
+        cell.idLabel.text = "# \(self.users[indexPath.row].id)"
         let imageURL = URL(string: self.users[indexPath.row].avatarURL)
         cell.avatarImage.kf.setImage(with: imageURL)
         return cell
@@ -244,14 +236,13 @@ extension SearchUsersViewController: UISearchResultsUpdating {
         APICaller.shared.getUserFromSearch(userName: searchQuery) { result in
             switch result {
             case .success(let user):
-                searchResultController.users.removeAll()
-                searchResultController.users.insert(user, at: 0)
-                DispatchQueue.main.async {
+                searchResultController.user = user
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     searchResultController.searchUserTableView.reloadData()
                 }
             case .failure(let error):
                 print(error.localizedDescription)
-                // nothing found
+                searchResultController.user = nil
             }
         }
         
