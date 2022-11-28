@@ -13,20 +13,20 @@ final class UserDetailViewController: UIViewController {
     
     var userSearchName: String?
     
-    private var userDetail: UserDetail! {
+    private var userDetail: UserDetail? {
         didSet {
-            guard let imageURL = URL(string: self.userDetail.avatarURL) else { return }
+            guard let imageURL = URL(string: self.userDetail?.avatarURL ?? "") else { return }
             DispatchQueue.main.async { [weak self] in
                 self?.userAvatar.kf.setImage(with: imageURL)
-                self?.userName.text = self?.userDetail.name
-                self?.userLogin.text = self?.userDetail.login
-                self?.userLocation.text = self?.userDetail.location
-                self?.userOrganization.text = self?.userDetail.company
-                self?.userEmail.text = self?.userDetail.email
-                self?.followers.text = "\(String(self?.userDetail.followers ?? 0)) followers"
-                self?.following.text = "\(String(self?.userDetail.following ?? 0)) following"
-                self?.registrationDate.text = "On GitHub since \(String(describing: self?.userDetail.createdAt.convertToDisplayFormat()))"
-                self?.profileURL = self?.userDetail.htmlUrl ?? ""
+                self?.userName.text = self?.userDetail?.name
+                self?.userLogin.text = self?.userDetail?.login
+                self?.userLocation.text = self?.userDetail?.location
+                self?.userOrganization.text = self?.userDetail?.company
+                self?.userEmail.text = self?.userDetail?.email
+                self?.followers.text = "\(String(self?.userDetail?.followers ?? 0)) followers"
+                self?.following.text = "\(String(self?.userDetail?.following ?? 0)) following"
+                self?.registrationDate.text = "On GitHub since \(String(describing: self?.userDetail?.createdAt.convertToDisplayFormat() ?? ""))"
+                self?.profileURL = self?.userDetail?.htmlUrl ?? ""
             }
         }
     }
@@ -93,26 +93,11 @@ final class UserDetailViewController: UIViewController {
         return label
     }()
     
-    private let profileButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Go to profile", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 16)
-        button.titleLabel?.tintColor = .white
-        button.layer.cornerRadius = 8
-        button.backgroundColor = .accentGreen
-        button.addTarget(self, action: #selector(didTapProfileButton), for: .touchUpInside)
-        return button
-    }()
-    
-    private var profileURL: String = {
-        let url = String()
-        return url
-    }()
+    private var profileURL = String()
     
     private let registrationDate: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
-        label.text = "on GitHub since November 25, 2009"
         label.textAlignment = .center
         label.textColor = .accentGreen
         return label
@@ -142,6 +127,17 @@ final class UserDetailViewController: UIViewController {
         view.backgroundColor = .backgroundCustomBlack
         view.layer.cornerRadius = 20
         return view
+    }()
+    
+    private let profileButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Go to profile", for: .normal)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 16)
+        button.titleLabel?.tintColor = .white
+        button.layer.cornerRadius = 8
+        button.backgroundColor = .accentGreen
+        button.addTarget(self, action: #selector(didTapProfileButton), for: .touchUpInside)
+        return button
     }()
     
     @objc func didTapProfileButton() {

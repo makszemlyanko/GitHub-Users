@@ -13,9 +13,9 @@ protocol SearchResultViewControllerDelegate: AnyObject {
 
 final class SearchResultViewController: UIViewController {
     
-    weak var delegate: SearchResultViewControllerDelegate?
-    
     var user: User?
+    
+    weak var delegate: SearchResultViewControllerDelegate?
     
     let searchUserTableView: UITableView = {
         let table = UITableView()
@@ -26,10 +26,7 @@ final class SearchResultViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.addSubview(searchUserTableView)
-        searchUserTableView.dataSource = self
-        searchUserTableView.delegate = self
+        configureSearchUserTableView()
     }
     
     override func viewDidLayoutSubviews() {
@@ -37,13 +34,17 @@ final class SearchResultViewController: UIViewController {
         searchUserTableView.frame = view.bounds
         searchUserTableView.separatorStyle = .none
     }
-
-
+    
+    private func configureSearchUserTableView() {
+        view.addSubview(searchUserTableView)
+        searchUserTableView.dataSource = self
+        searchUserTableView.delegate = self
+    }
 }
 
 extension SearchResultViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        user != nil ? 1 : 0
+        self.user != nil ? 1 : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -70,13 +71,11 @@ extension SearchResultViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return user == nil ? 350 : 0
     }
-    
-    
 }
 
 extension SearchResultViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userName = user?.login
-        delegate?.showUserDetail(userName: userName!)
+        let userName = self.user?.login
+        delegate?.showUserDetail(userName: userName ?? "")
     }
 }

@@ -1,5 +1,5 @@
 //
-//  AllUsersViewController.swift
+//  UsersListViewController.swift
 //  GitHub Users
 //
 //  Created by Maks Kokos on 18.11.2022.
@@ -8,44 +8,12 @@
 import UIKit
 import Kingfisher
 
-final class AllUsersViewController: UIViewController, UISearchControllerDelegate {
-    #warning("weak self check")
-
-    private let floatingUpButton: UIButton = {
-        let button = UIButton(frame: .init(x: 0, y: 0, width: 60, height: 60))
-        button.layer.cornerRadius = 22
-        button.backgroundColor = .accentGreen
-        button.layer.shadowRadius = 10
-        button.layer.shadowOpacity = 0.5
-        let image = UIImage(systemName: "arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
-        button.setImage(image, for: .normal)
-        button.tintColor = .white
-        button.addTarget(self, action: #selector(didTapUpButton), for: .touchUpInside)
-        return button
-    }()
+final class UsersListViewController: UIViewController {
     
-    @objc func didTapUpButton() {
-        let indexPath = IndexPath(row: NSNotFound, section: 0)
-        usersTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-
-    }
-    
+    private var users = [User]()
     
     private var searchOffset = 0
     private var fetchMoreUsers = false
-    
-    private lazy var refreshControl: UIRefreshControl = {
-        let rc = UIRefreshControl()
-        rc.tintColor = .accentGreen
-        rc.backgroundColor = .backgroundCustomBlack
-        let attributes = [NSAttributedString.Key.foregroundColor: UIColor.accentGreen]
-        rc.attributedTitle = NSAttributedString(string: "Refreshing", attributes: attributes)
-        rc.addTarget(self, action: #selector(pullToRefreshList), for: .valueChanged)
-        return rc
-    }()
-    
-    var users = [User]()
-    
     
     private let usersTableView: UITableView = {
         let table = UITableView()
@@ -62,57 +30,89 @@ final class AllUsersViewController: UIViewController, UISearchControllerDelegate
         controller.searchBar.searchBarStyle = .minimal
         controller.searchBar.searchTextField.leftView?.tintColor = .accentGreen
         controller.searchBar.searchTextField.textColor = .white
+        controller.hidesNavigationBarDuringPresentation = false
         return controller
     }()
     
+    private lazy var returnToTopButton: UIButton = {
+        let button = UIButton(frame: .init(x: 0, y: 0, width: 60, height: 60))
+        let image = UIImage(systemName: "arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
+        button.layer.cornerRadius = 22
+        button.layer.shadowRadius = 10
+        button.layer.shadowOpacity = 0.5
+        button.setImage(image, for: .normal)
+        button.backgroundColor = .accentGreen
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(didTapUpButton), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func didTapUpButton() {
+        let indexPath = IndexPath(row: NSNotFound, section: 0)
+        usersTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+    }
+    
+    private lazy var refreshControl: UIRefreshControl = {
+        let rc = UIRefreshControl()
+        let attributes = [NSAttributedString.Key.foregroundColor: UIColor.accentGreen]
+        rc.tintColor = .accentGreen
+        rc.backgroundColor = .backgroundCustomBlack
+        rc.attributedTitle = NSAttributedString(string: "Refreshing", attributes: attributes)
+        rc.addTarget(self, action: #selector(pullToRefreshList), for: .valueChanged)
+        return rc
+    }()
+    
     @objc func pullToRefreshList(sender: UIRefreshControl) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            self.users.shuffle()
-            self.usersTableView.reloadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: { [weak self] in
+            self?.users.shuffle()
+            self?.usersTableView.reloadData()
         })
         sender.endRefreshing()
     }
-
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
+        configureUsersTableView()
+        configureNavigationBar()
         getAllUsersList()
-        
-        
-        
-        
-        self.usersTableView.refreshControl = self.refreshControl
-        setupSearchBar()
-        view.addSubview(usersTableView)
-        
-        
-        
-        usersTableView.dataSource = self
-        usersTableView.delegate = self
-        
-
-        
-        navigationController?.navigationBar.tintColor = .accentGreen
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        floatingUpButton.frame = CGRect(x: view.frame.size.width - 70, y: view.frame.size.height - 70, width: 44, height: 44)
-    }
-    
-
-    
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         usersTableView.frame = view.bounds
         usersTableView.separatorStyle = .none
     }
     
-
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        returnToTopButton.frame = CGRect(x: view.frame.size.width - 70, y: view.frame.size.height - 70, width: 44, height: 44)
+    }
+    
+    private func configureUsersTableView() {
+        view.addSubview(usersTableView)
+        usersTableView.refreshControl = self.refreshControl
+        usersTableView.dataSource = self
+        usersTableView.delegate = self
+    }
+    
+    private func configureNavigationBar() {
+        navigationItem.title = "Search"
+        navigationItem.titleView = searchController.searchBar
+        navigationController?.navigationBar.tintColor = .accentGreen
+        definesPresentationContext = true
+        searchController.searchResultsUpdater = self
+    }
+    
+    private func createSpinnerForFooter() -> UIView {
+        let footerView = UIView(frame: .init(x: 0, y: 0, width: view.frame.width, height: 120))
+        let spinner = UIActivityIndicatorView()
+        spinner.center.x = footerView.center.x
+        spinner.center.y = footerView.center.y
+        spinner.color = .accentGreen
+        footerView.addSubview(spinner)
+        spinner.startAnimating()
+        return footerView
+    }
     
     private func getAllUsersList() {
         APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { [weak self] response in
@@ -128,38 +128,9 @@ final class AllUsersViewController: UIViewController, UISearchControllerDelegate
             }
         }
     }
-    
-    
-    private func setupSearchBar() {
-        navigationItem.title = "Search"
-        navigationItem.titleView = searchController.searchBar
-        definesPresentationContext = true
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchResultsUpdater = self
-    }
-    
-    
-
-    
-    private func createSpinnerForFooter() -> UIView {
-        let footerView = UIView(frame: .init(x: 0, y: 0, width: view.frame.width, height: 120))
-        let spinner = UIActivityIndicatorView()
-        spinner.center.x = footerView.center.x
-        spinner.center.y = footerView.center.y
-        spinner.color = .accentGreen
-        footerView.addSubview(spinner)
-        spinner.startAnimating()
-        return footerView
-    }
-    
-
-    
-
-    
-
 }
 
-extension AllUsersViewController: UITableViewDataSource {
+extension UsersListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.users.count
     }
@@ -178,10 +149,10 @@ extension AllUsersViewController: UITableViewDataSource {
     }
 }
 
-extension AllUsersViewController: UITableViewDelegate {
+extension UsersListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = UserDetailViewController()
-        let userName = users[indexPath.row].login
+        let userName = self.users[indexPath.row].login
         detailVC.userSearchName = userName
         navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -190,22 +161,18 @@ extension AllUsersViewController: UITableViewDelegate {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         
-        
-        // floating button
         if offsetY <= -48 {
-            floatingUpButton.removeFromSuperview()
+            self.returnToTopButton.removeFromSuperview()
         } else {
-            view.addSubview(floatingUpButton)
+            view.addSubview(self.returnToTopButton)
         }
         
-        
-        // network
         if offsetY > contentHeight - scrollView.frame.height {
             if !self.fetchMoreUsers {
                 self.fetchMoreUsers = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    self.usersTableView.tableFooterView = self.createSpinnerForFooter()
-                    APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { [weak self] response in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                    self?.usersTableView.tableFooterView = self?.createSpinnerForFooter()
+                    APICaller.shared.getListOfAllUsers(searchOffset: self?.searchOffset ?? 0) { response in
                         switch response {
                         case .success(let nextUsersPage):
                             self?.users += nextUsersPage
@@ -222,10 +189,10 @@ extension AllUsersViewController: UITableViewDelegate {
     }
 }
 
-extension AllUsersViewController: UISearchResultsUpdating {
+extension UsersListViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
-       guard let searchQuery = searchBar.text,
+        guard let searchQuery = searchBar.text,
               !searchQuery.trimmingCharacters(in: .whitespaces).isEmpty,
               searchQuery.trimmingCharacters(in: .whitespaces).count >= 3,
               let searchResultController = searchController.searchResultsController as? SearchResultViewController else { return }
@@ -244,17 +211,13 @@ extension AllUsersViewController: UISearchResultsUpdating {
                 searchResultController.user = nil
             }
         }
-        
     }
-    
-    
 }
 
-extension AllUsersViewController: SearchResultViewControllerDelegate {
+extension UsersListViewController: SearchResultViewControllerDelegate {
     func showUserDetail(userName: String) {
         let detailVC = UserDetailViewController()
         detailVC.userSearchName = userName
         navigationController?.pushViewController(detailVC, animated: true)
     } 
 }
- 

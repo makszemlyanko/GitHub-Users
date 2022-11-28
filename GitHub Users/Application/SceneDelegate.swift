@@ -15,7 +15,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let rootViewController = AllUsersViewController()
+        let rootViewController = UsersListViewController()
         let navController = UINavigationController(rootViewController: rootViewController)
         navController.navigationBar.standardAppearance = createNavBarAppearance()
         navController.navigationBar.scrollEdgeAppearance = navController.navigationBar.standardAppearance
