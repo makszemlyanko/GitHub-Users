@@ -15,7 +15,7 @@ struct Constants {
 final class APICaller {
     
     static let shared = APICaller()
-    
+    #warning("refactor")
     func getListOfAllUsers(searchOffset: Int, completion: @escaping (Result<[User], Error>) -> Void) {
         guard let url = URL(string: Constants.listOfAllUsersURL) else {return}
         let parameters = ["per_page": 30, "since": searchOffset]
@@ -28,16 +28,17 @@ final class APICaller {
     func getUserFromSearch(userName: String, completion: @escaping (Result<User, Error>) -> Void) {
         let urlString = Constants.listOfAllUsersURL + "/\(userName)"
         guard let url = URL(string: urlString) else { return }
-        AF.request(url, method: .get).validate().responseDecodable(of: User.self) { response in
-            guard let data = response.value, response.error == nil else { return completion(.failure(response.error!)) }
-            completion(.success(data))
-        }
+        createDataTask(url: url, model: User.self, completion: completion)
     }
 
     func getUserDetail(userName: String, completion: @escaping (Result<UserDetail, Error>) -> Void) {
         let urlString = Constants.listOfAllUsersURL + "/\(userName)"
         guard let url = URL(string: urlString) else { return }
-        AF.request(url, method: .get).validate().responseDecodable(of: UserDetail.self) { response in
+        createDataTask(url: url, model: UserDetail.self, completion: completion)
+    }
+    
+    private func createDataTask<T: Decodable>(url: URL, model: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
+        AF.request(url, method: .get).validate().responseDecodable(of: model.self) { response in
             guard let data = response.value, response.error == nil else { return completion(.failure(response.error!)) }
             completion(.success(data))
         }

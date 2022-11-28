@@ -1,5 +1,5 @@
 //
-//  SearchUsersViewController.swift
+//  AllUsersViewController.swift
 //  GitHub Users
 //
 //  Created by Maks Kokos on 18.11.2022.
@@ -8,10 +8,9 @@
 import UIKit
 import Kingfisher
 
-final class SearchUsersViewController: UIViewController, UISearchControllerDelegate {
-    
-    
- 
+final class AllUsersViewController: UIViewController, UISearchControllerDelegate {
+    #warning("weak self check")
+
     private let floatingUpButton: UIButton = {
         let button = UIButton(frame: .init(x: 0, y: 0, width: 60, height: 60))
         button.layer.cornerRadius = 22
@@ -160,17 +159,17 @@ final class SearchUsersViewController: UIViewController, UISearchControllerDeleg
 
 }
 
-extension SearchUsersViewController: UITableViewDataSource {
+extension AllUsersViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.users.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.cellId, for: indexPath) as? UserTableViewCell else { return UITableViewCell() }
-        cell.loginLabel.text = self.users[indexPath.row].login
-        cell.idLabel.text = "# \(self.users[indexPath.row].id)"
+        cell.userLogin.text = self.users[indexPath.row].login
+        cell.userId.text = "# \(self.users[indexPath.row].id)"
         let imageURL = URL(string: self.users[indexPath.row].avatarURL)
-        cell.avatarImage.kf.setImage(with: imageURL)
+        cell.userAvatar.kf.setImage(with: imageURL)
         return cell
     }
     
@@ -179,7 +178,7 @@ extension SearchUsersViewController: UITableViewDataSource {
     }
 }
 
-extension SearchUsersViewController: UITableViewDelegate {
+extension AllUsersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = UserDetailViewController()
         let userName = users[indexPath.row].login
@@ -204,7 +203,7 @@ extension SearchUsersViewController: UITableViewDelegate {
         if offsetY > contentHeight - scrollView.frame.height {
             if !self.fetchMoreUsers {
                 self.fetchMoreUsers = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.usersTableView.tableFooterView = self.createSpinnerForFooter()
                     APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { [weak self] response in
                         switch response {
@@ -223,7 +222,7 @@ extension SearchUsersViewController: UITableViewDelegate {
     }
 }
 
-extension SearchUsersViewController: UISearchResultsUpdating {
+extension AllUsersViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
        guard let searchQuery = searchBar.text,
@@ -251,7 +250,7 @@ extension SearchUsersViewController: UISearchResultsUpdating {
     
 }
 
-extension SearchUsersViewController: SearchResultViewControllerDelegate {
+extension AllUsersViewController: SearchResultViewControllerDelegate {
     func showUserDetail(userName: String) {
         let detailVC = UserDetailViewController()
         detailVC.userSearchName = userName

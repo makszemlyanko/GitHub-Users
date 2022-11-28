@@ -48,10 +48,10 @@ extension SearchResultViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.cellId, for: indexPath) as? UserTableViewCell else { return UITableViewCell() }
-        cell.loginLabel.text = self.user?.login
-        cell.idLabel.text = "# \(self.user?.id ?? 0)"
+        cell.userLogin.text = self.user?.login
+        cell.userId.text = "# \(self.user?.id ?? 0)"
         let imageURL = URL(string: self.user?.avatarURL ?? "")
-        cell.avatarImage.kf.setImage(with: imageURL)
+        cell.userAvatar.kf.setImage(with: imageURL)
         return cell
     }
     
