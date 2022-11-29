@@ -10,10 +10,11 @@ import Kingfisher
 
 final class UsersListViewController: UIViewController {
     
-    private var users = [User]()
+    var presenter: UsersListPresenterProtocol!
     
-    private var searchOffset = 0
-    private var fetchMoreUsers = false
+//    private var users = [User]()
+    
+//    private var fetchMoreUsers = false
     
     private let usersTableView: UITableView = {
         let table = UITableView()
@@ -64,7 +65,7 @@ final class UsersListViewController: UIViewController {
     
     @objc func pullToRefreshList(sender: UIRefreshControl) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: { [weak self] in
-            self?.users.shuffle()
+            self?.presenter.users?.shuffle()
             self?.usersTableView.reloadData()
         })
         sender.endRefreshing()
@@ -74,7 +75,7 @@ final class UsersListViewController: UIViewController {
         super.viewDidLoad()
         configureUsersTableView()
         configureNavigationBar()
-        getAllUsersList()
+//        getAllUsersList()
     }
     
     override func viewDidLayoutSubviews() {
@@ -114,32 +115,32 @@ final class UsersListViewController: UIViewController {
         return footerView
     }
     
-    private func getAllUsersList() {
-        APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { [weak self] response in
-            switch response {
-            case .success(let results):
-                self?.users = results
-                self?.searchOffset = results.last?.id ?? 0
-                DispatchQueue.main.async {
-                    self?.usersTableView.reloadData()
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
+//    private func getAllUsersList() {
+//        APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { [weak self] response in
+//            switch response {
+//            case .success(let results):
+//                self?.users = results
+//                self?.searchOffset = results.last?.id ?? 0
+//                DispatchQueue.main.async {
+//                    self?.usersTableView.reloadData()
+//                }
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//            }
+//        }
+//    }
 }
 
 extension UsersListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.users.count
+        presenter.users?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.cellId, for: indexPath) as? UserTableViewCell else { return UITableViewCell() }
-        cell.userLogin.text = self.users[indexPath.row].login
-        cell.userId.text = "# \(self.users[indexPath.row].id)"
-        let imageURL = URL(string: self.users[indexPath.row].avatarURL)
+        cell.userLogin.text = presenter.users?[indexPath.row].login
+        cell.userId.text = "# \(presenter.users?[indexPath.row].id ?? 0)"
+        let imageURL = URL(string: presenter.users?[indexPath.row].avatarURL ?? "")
         cell.userAvatar.kf.setImage(with: imageURL)
         return cell
     }
@@ -152,7 +153,7 @@ extension UsersListViewController: UITableViewDataSource {
 extension UsersListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = UserDetailViewController()
-        let userName = self.users[indexPath.row].login
+        let userName = presenter.users?[indexPath.row].login
         detailVC.userSearchName = userName
         navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -168,22 +169,11 @@ extension UsersListViewController: UITableViewDelegate {
         }
         
         if offsetY > contentHeight - scrollView.frame.height {
-            if !self.fetchMoreUsers {
-                self.fetchMoreUsers = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-                    self?.usersTableView.tableFooterView = self?.createSpinnerForFooter()
-                    APICaller.shared.getListOfAllUsers(searchOffset: self?.searchOffset ?? 0) { response in
-                        switch response {
-                        case .success(let nextUsersPage):
-                            self?.users += nextUsersPage
-                            self?.searchOffset = nextUsersPage.last?.id ?? 30
-                            self?.fetchMoreUsers = false
-                            self?.usersTableView.reloadData()
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                        }
-                    }
-                }
+            if !presenter.fetchMoreUsers {
+                presenter.fetchMoreUsers = true
+                self.usersTableView.tableFooterView = self.createSpinnerForFooter()
+                self.presenter.getNextPageWithUsers()
+                self.succes()
             }
         }
     }
@@ -199,18 +189,25 @@ extension UsersListViewController: UISearchResultsUpdating {
         
         searchResultController.delegate = self
         
-        APICaller.shared.getUserFromSearch(userName: searchQuery) { result in
-            switch result {
-            case .success(let user):
-                searchResultController.user = user
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    searchResultController.searchUserTableView.reloadData()
+        
+        
+            APICaller.shared.getUserFromSearch(userName: searchQuery) { result in
+                switch result {
+                case .success(let user):
+                    searchResultController.user = user
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        searchResultController.searchUserTableView.reloadData()
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                    searchResultController.user = nil
                 }
-            case .failure(let error):
-                print(error.localizedDescription)
-                searchResultController.user = nil
             }
-        }
+    
+        
+        
+        
+
     }
 }
 
@@ -220,4 +217,14 @@ extension UsersListViewController: SearchResultViewControllerDelegate {
         detailVC.userSearchName = userName
         navigationController?.pushViewController(detailVC, animated: true)
     } 
+}
+
+extension UsersListViewController: UsersListProtocol {
+    func succes() {
+        usersTableView.reloadData()
+    }
+    
+    func failure(error: Error) {
+        print(error.localizedDescription)
+    }
 }

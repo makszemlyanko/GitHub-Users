@@ -11,6 +11,8 @@ import SafariServices
 
 final class UserDetailViewController: UIViewController {
     
+    var presenter: UserDetailPresenterProtocol!
+    
     var userSearchName: String?
     
     private var userDetail: UserDetail? {
@@ -277,4 +279,8 @@ final class UserDetailViewController: UIViewController {
             gitHubBottomImage.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
+}
+
+extension UserDetailViewController: UserDetailProtocol {
+    
 }

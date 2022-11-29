@@ -15,10 +15,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let rootViewController = UsersListViewController()
-        let navController = UINavigationController(rootViewController: rootViewController)
+        let navController = UINavigationController()
         navController.navigationBar.standardAppearance = createNavBarAppearance()
         navController.navigationBar.scrollEdgeAppearance = navController.navigationBar.standardAppearance
+        let builder = Builder()
+        let router = Router(navController: navController, builder: builder)
+        router.initialViewController()
         window?.rootViewController = navController
         window?.makeKeyAndVisible()
     }
