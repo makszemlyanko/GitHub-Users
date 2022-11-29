@@ -8,11 +8,15 @@
 import Foundation
 
 protocol UserDetailProtocol: AnyObject {
-    
+    func setUserDetail(detail: UserDetail?)
+    func failure(error: Error)
 }
 
 protocol UserDetailPresenterProtocol {
-    init(view: UserDetailProtocol, model: UserDetail?, router: RouterProtocol)
+    var userDetail: UserDetail? { get set }
+    var userSearchName: String? { get set }
+    init(view: UserDetailProtocol, searchName: String, router: RouterProtocol)
+    func getUserDetail()
 }
 
 final class UserDetailPresenter: UserDetailPresenterProtocol {
@@ -23,10 +27,25 @@ final class UserDetailPresenter: UserDetailPresenterProtocol {
     
     var userDetail: UserDetail?
     
-    required init(view: UserDetailProtocol, model: UserDetail?, router: RouterProtocol) {
+    var userSearchName: String?
+    
+    required init(view: UserDetailProtocol, searchName: String, router: RouterProtocol) {
         self.view = view
-        self.userDetail = model
         self.router = router
+        self.userSearchName = searchName
+        getUserDetail()
     }
     
+    func getUserDetail() {
+        APICaller.shared.getUserDetail(userName: self.userSearchName ?? "") { [weak self] result in
+            switch result {
+            case .success(let user):
+                self?.userDetail = user
+                self?.view?.setUserDetail(detail: self?.userDetail)
+            case .failure(let error):
+                self?.view?.failure(error: error)
+            }
+        }
+        
+    }
 }

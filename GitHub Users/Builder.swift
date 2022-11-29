@@ -9,7 +9,7 @@ import UIKit
 
 protocol BuilderProtocol {
     func createUsersListModule(router: RouterProtocol) -> UIViewController
-    func createUserDetailModule(model: UserDetail?, router: RouterProtocol) -> UIViewController
+    func createUserDetailModule(searchName: String ,router: RouterProtocol) -> UIViewController
 }
 
 final class Builder: BuilderProtocol {
@@ -21,9 +21,11 @@ final class Builder: BuilderProtocol {
         return view
     }
 
-    func createUserDetailModule(model: UserDetail?, router: RouterProtocol) -> UIViewController {
+    func createUserDetailModule(searchName: String ,router: RouterProtocol) -> UIViewController {
         let view = UserDetailViewController()
-        let presenter = UserDetailPresenter(view: view, model: model, router: router)
+        let presenter = UserDetailPresenter(view: view, searchName: searchName, router: router)
+    
+//        view.userSearchName = searchName
         view.presenter = presenter
         return view
     }

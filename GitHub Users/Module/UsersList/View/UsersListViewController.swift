@@ -12,10 +12,6 @@ final class UsersListViewController: UIViewController {
     
     var presenter: UsersListPresenterProtocol!
     
-//    private var users = [User]()
-    
-//    private var fetchMoreUsers = false
-    
     private let usersTableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .backgroundDarkGray
@@ -75,7 +71,6 @@ final class UsersListViewController: UIViewController {
         super.viewDidLoad()
         configureUsersTableView()
         configureNavigationBar()
-//        getAllUsersList()
     }
     
     override func viewDidLayoutSubviews() {
@@ -114,21 +109,6 @@ final class UsersListViewController: UIViewController {
         spinner.startAnimating()
         return footerView
     }
-    
-//    private func getAllUsersList() {
-//        APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { [weak self] response in
-//            switch response {
-//            case .success(let results):
-//                self?.users = results
-//                self?.searchOffset = results.last?.id ?? 0
-//                DispatchQueue.main.async {
-//                    self?.usersTableView.reloadData()
-//                }
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//            }
-//        }
-//    }
 }
 
 extension UsersListViewController: UITableViewDataSource {
@@ -152,10 +132,8 @@ extension UsersListViewController: UITableViewDataSource {
 
 extension UsersListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailVC = UserDetailViewController()
-        let userName = presenter.users?[indexPath.row].login
-        detailVC.userSearchName = userName
-        navigationController?.pushViewController(detailVC, animated: true)
+        let userName = presenter.users?[indexPath.row].login ?? ""
+        presenter.didTapOnUserCell(searchName: userName)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -189,21 +167,22 @@ extension UsersListViewController: UISearchResultsUpdating {
         
         searchResultController.delegate = self
         
+        #warning("need presenter")
         
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             APICaller.shared.getUserFromSearch(userName: searchQuery) { result in
                 switch result {
                 case .success(let user):
                     searchResultController.user = user
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        searchResultController.searchUserTableView.reloadData()
-                    }
+                    
+                    searchResultController.searchUserTableView.reloadData()
+                    
                 case .failure(let error):
                     print(error.localizedDescription)
                     searchResultController.user = nil
                 }
             }
-    
+        }
         
         
         
@@ -213,9 +192,7 @@ extension UsersListViewController: UISearchResultsUpdating {
 
 extension UsersListViewController: SearchResultViewControllerDelegate {
     func showUserDetail(userName: String) {
-        let detailVC = UserDetailViewController()
-        detailVC.userSearchName = userName
-        navigationController?.pushViewController(detailVC, animated: true)
+        presenter.didTapOnUserCell(searchName: userName)
     } 
 }
 

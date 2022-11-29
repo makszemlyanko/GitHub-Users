@@ -12,27 +12,7 @@ import SafariServices
 final class UserDetailViewController: UIViewController {
     
     var presenter: UserDetailPresenterProtocol!
-    
-    var userSearchName: String?
-    
-    private var userDetail: UserDetail? {
-        didSet {
-            guard let imageURL = URL(string: self.userDetail?.avatarURL ?? "") else { return }
-            DispatchQueue.main.async { [weak self] in
-                self?.userAvatar.kf.setImage(with: imageURL)
-                self?.userName.text = self?.userDetail?.name
-                self?.userLogin.text = self?.userDetail?.login
-                self?.userLocation.text = self?.userDetail?.location
-                self?.userOrganization.text = self?.userDetail?.company
-                self?.userEmail.text = self?.userDetail?.email
-                self?.followers.text = "\(String(self?.userDetail?.followers ?? 0)) followers"
-                self?.following.text = "\(String(self?.userDetail?.following ?? 0)) following"
-                self?.registrationDate.text = "On GitHub since \(String(describing: self?.userDetail?.createdAt.convertToDisplayFormat() ?? ""))"
-                self?.profileURL = self?.userDetail?.htmlUrl ?? ""
-            }
-        }
-    }
-    
+
     private let userAvatar: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFill
@@ -144,7 +124,8 @@ final class UserDetailViewController: UIViewController {
     
     @objc func didTapProfileButton() {
         let profileUrl = profileURL
-        let vc = SFSafariViewController(url: URL(string: profileUrl)!)
+        guard let url = URL(string: profileUrl) else { return }
+        let vc = SFSafariViewController(url: url)
         present(vc, animated: true)
     }
     
@@ -152,18 +133,6 @@ final class UserDetailViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .backgroundDarkGray
         configureLayout()
-        getDetailUserInfo()
-    }
-    
-    private func getDetailUserInfo() {
-        APICaller.shared.getUserDetail(userName: userSearchName ?? "") { [weak self] result in
-            switch result {
-            case .success(let user):
-                self?.userDetail = user
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
     }
     
     private func configureLayout() {
@@ -282,5 +251,23 @@ final class UserDetailViewController: UIViewController {
 }
 
 extension UserDetailViewController: UserDetailProtocol {
+    func setUserDetail(detail: UserDetail?) {
+        DispatchQueue.main.async { [weak self] in
+        guard let imageURL = URL(string: detail?.avatarURL ?? "") else { return }
+            self?.userAvatar.kf.setImage(with: imageURL)
+            self?.userName.text = detail?.name
+            self?.userLogin.text = detail?.login
+            self?.userLocation.text = detail?.location
+            self?.userOrganization.text = detail?.company
+            self?.userEmail.text = detail?.email
+            self?.followers.text = "\(String(detail?.followers ?? 0)) followers"
+            self?.following.text = "\(String(detail?.following ?? 0)) following"
+            self?.registrationDate.text = "On GitHub since \(String(describing: detail?.createdAt.convertToDisplayFormat() ?? ""))"
+            self?.profileURL = detail?.htmlUrl ?? ""
+        }
+    }
     
+    func failure(error: Error) {
+        print(error.localizedDescription)
+    }
 }

@@ -209,8 +209,8 @@
 		15F6B51D2927B63C003F4AA8 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				15F6B5032927ABD4003F4AA8 /* UsersListViewController.swift */,
 				15812E65292B55B70045C46F /* UserTableViewCell.swift */,
+				15F6B5032927ABD4003F4AA8 /* UsersListViewController.swift */,
 				159F330D292F4AEE00072F94 /* SearchResultViewController.swift */,
 			);
 			path = View;
