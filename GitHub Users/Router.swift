@@ -15,7 +15,6 @@ protocol RouterProtocol {
     
     func initialViewController()
     func pushToUserDetail(searchName: String)
-    // func popToRoot()
 }
 
 final class Router: RouterProtocol {
@@ -37,8 +36,6 @@ final class Router: RouterProtocol {
         let userDetailVC = builder.createUserDetailModule(searchName: searchName, router: self)
         navController.pushViewController(userDetailVC, animated: true)
     }
-    
-    
 }
 
 

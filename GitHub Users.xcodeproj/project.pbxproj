@@ -95,6 +95,40 @@
 			path = Presenter;
 			sourceTree = "<group>";
 		};
+		156E1FCE293634B900B736C2 /* SearchResult */ = {
+			isa = PBXGroup;
+			children = (
+				156E1FD1293634FE00B736C2 /* View */,
+				156E1FD22936350500B736C2 /* Presenter */,
+			);
+			path = SearchResult;
+			sourceTree = "<group>";
+		};
+		156E1FD0293634DD00B736C2 /* Users */ = {
+			isa = PBXGroup;
+			children = (
+				15812E8D292CC3910045C46F /* Model */,
+				15F6B50C2927B0FA003F4AA8 /* UsersList */,
+				156E1FCE293634B900B736C2 /* SearchResult */,
+			);
+			path = Users;
+			sourceTree = "<group>";
+		};
+		156E1FD1293634FE00B736C2 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				159F330D292F4AEE00072F94 /* SearchResultViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		156E1FD22936350500B736C2 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
 		15812E8A292CC3650045C46F /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -171,7 +205,7 @@
 		15F6B50B2927B0EB003F4AA8 /* Module */ = {
 			isa = PBXGroup;
 			children = (
-				15F6B50C2927B0FA003F4AA8 /* UsersList */,
+				156E1FD0293634DD00B736C2 /* Users */,
 				15F6B50D2927B102003F4AA8 /* Detail */,
 			);
 			path = Module;
@@ -180,7 +214,6 @@
 		15F6B50C2927B0FA003F4AA8 /* UsersList */ = {
 			isa = PBXGroup;
 			children = (
-				15812E8D292CC3910045C46F /* Model */,
 				15F6B51D2927B63C003F4AA8 /* View */,
 				156E1FB92935EE1700B736C2 /* Presenter */,
 			);
@@ -211,7 +244,6 @@
 			children = (
 				15812E65292B55B70045C46F /* UserTableViewCell.swift */,
 				15F6B5032927ABD4003F4AA8 /* UsersListViewController.swift */,
-				159F330D292F4AEE00072F94 /* SearchResultViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

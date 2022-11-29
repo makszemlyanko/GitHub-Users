@@ -44,14 +44,14 @@ final class SearchResultViewController: UIViewController {
 
 extension SearchResultViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.user != nil ? 1 : 0
+        user != nil ? 1 : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.cellId, for: indexPath) as? UserTableViewCell else { return UITableViewCell() }
-        cell.userLogin.text = self.user?.login
-        cell.userId.text = "# \(self.user?.id ?? 0)"
-        let imageURL = URL(string: self.user?.avatarURL ?? "")
+        cell.userLogin.text = user?.login
+        cell.userId.text = "# \(user?.id ?? 0)"
+        let imageURL = URL(string: user?.avatarURL ?? "")
         cell.userAvatar.kf.setImage(with: imageURL)
         return cell
     }
@@ -69,13 +69,13 @@ extension SearchResultViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return user == nil ? 350 : 0
+        user == nil ? 350 : 0
     }
 }
 
 extension SearchResultViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userName = self.user?.login
+        let userName = user?.login
         delegate?.showUserDetail(userName: userName ?? "")
     }
 }

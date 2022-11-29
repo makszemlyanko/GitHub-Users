@@ -24,8 +24,6 @@ final class Builder: BuilderProtocol {
     func createUserDetailModule(searchName: String ,router: RouterProtocol) -> UIViewController {
         let view = UserDetailViewController()
         let presenter = UserDetailPresenter(view: view, searchName: searchName, router: router)
-    
-//        view.userSearchName = searchName
         view.presenter = presenter
         return view
     }

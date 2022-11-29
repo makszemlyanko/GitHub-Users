@@ -165,6 +165,7 @@ extension UsersListViewController: UISearchResultsUpdating {
               searchQuery.trimmingCharacters(in: .whitespaces).count >= 3,
               let searchResultController = searchController.searchResultsController as? SearchResultViewController else { return }
         
+        
         searchResultController.delegate = self
         
         #warning("need presenter")
@@ -174,9 +175,7 @@ extension UsersListViewController: UISearchResultsUpdating {
                 switch result {
                 case .success(let user):
                     searchResultController.user = user
-                    
                     searchResultController.searchUserTableView.reloadData()
-                    
                 case .failure(let error):
                     print(error.localizedDescription)
                     searchResultController.user = nil

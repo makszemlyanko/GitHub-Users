@@ -74,25 +74,6 @@ final class UsersListPresenter: UsersListPresenterProtocol {
     func didTapOnUserCell(searchName: String) {
         router.pushToUserDetail(searchName: searchName)
     }
-    
-    
-    func fsd() {
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-        APICaller.shared.getUserFromSearch(userName: searchQuery) { result in
-            switch result {
-            case .success(let user):
-                searchResultController.user = user
-                
-                searchResultController.searchUserTableView.reloadData()
-                
-            case .failure(let error):
-                print(error.localizedDescription)
-                searchResultController.user = nil
-            }
-        }
-    }
-        
-    }
         
 }
 
