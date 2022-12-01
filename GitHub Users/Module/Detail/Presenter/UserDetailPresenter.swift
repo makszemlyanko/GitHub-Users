@@ -22,11 +22,8 @@ protocol UserDetailPresenterProtocol {
 final class UserDetailPresenter: UserDetailPresenterProtocol {
     
     weak var view: UserDetailProtocol?
-    
     var router: RouterProtocol
-    
     var userDetail: UserDetail?
-    
     var userSearchName: String?
     
     required init(view: UserDetailProtocol, searchName: String, router: RouterProtocol) {
@@ -46,6 +43,5 @@ final class UserDetailPresenter: UserDetailPresenterProtocol {
                 self?.view?.failure(error: error)
             }
         }
-        
     }
 }

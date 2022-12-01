@@ -13,7 +13,7 @@ protocol SearchResultViewControllerDelegate: AnyObject {
 
 final class SearchResultViewController: UIViewController {
     
-    var user: User?
+    var presenter: SearchResultPresenterProtocol?
     
     weak var delegate: SearchResultViewControllerDelegate?
     
@@ -44,14 +44,14 @@ final class SearchResultViewController: UIViewController {
 
 extension SearchResultViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        user != nil ? 1 : 0
+        presenter?.user != nil ? 1 : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.cellId, for: indexPath) as? UserTableViewCell else { return UITableViewCell() }
-        cell.userLogin.text = user?.login
-        cell.userId.text = "# \(user?.id ?? 0)"
-        let imageURL = URL(string: user?.avatarURL ?? "")
+        cell.userLogin.text = presenter?.user?.login
+        cell.userId.text = "# \(presenter?.user?.id ?? 0)"
+        let imageURL = URL(string: presenter?.user?.avatarURL ?? "")
         cell.userAvatar.kf.setImage(with: imageURL)
         return cell
     }
@@ -69,13 +69,23 @@ extension SearchResultViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        user == nil ? 350 : 0
+        presenter?.user == nil ? 350 : 0
     }
 }
 
 extension SearchResultViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userName = user?.login
+        let userName = presenter?.user?.login
         delegate?.showUserDetail(userName: userName ?? "")
+    }
+}
+
+extension SearchResultViewController: SearchResultProtocol {
+    func success() {
+        searchUserTableView.reloadData()
+    }
+    
+    func failure(error: Error) {
+        print(error.localizedDescription)
     }
 }

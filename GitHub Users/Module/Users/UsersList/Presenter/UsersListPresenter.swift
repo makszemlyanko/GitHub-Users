@@ -24,14 +24,10 @@ protocol UsersListPresenterProtocol {
 
 final class UsersListPresenter: UsersListPresenterProtocol {
    
-    var users: [User]?
-    
     weak var view: UsersListProtocol?
-    
+    var users: [User]?
     var router: RouterProtocol
-    
     var searchOffset = 0
-    
     var fetchMoreUsers = false
     
     init(view: UsersListProtocol, router: RouterProtocol) {
@@ -74,6 +70,4 @@ final class UsersListPresenter: UsersListPresenterProtocol {
     func didTapOnUserCell(searchName: String) {
         router.pushToUserDetail(searchName: searchName)
     }
-        
 }
-

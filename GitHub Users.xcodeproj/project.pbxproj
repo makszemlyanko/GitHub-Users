@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		155BD0952938811D009FEC7F /* SearchResultPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155BD0942938811D009FEC7F /* SearchResultPresenter.swift */; };
 		156E1FBF2935EE9F00B736C2 /* UserDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E1FBE2935EE9F00B736C2 /* UserDetailPresenter.swift */; };
 		156E1FC22935F0B500B736C2 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E1FC12935F0B500B736C2 /* Router.swift */; };
 		156E1FC52935F1BA00B736C2 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E1FC42935F1BA00B736C2 /* Builder.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		155BD0942938811D009FEC7F /* SearchResultPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultPresenter.swift; sourceTree = "<group>"; };
 		156E1FBE2935EE9F00B736C2 /* UserDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailPresenter.swift; sourceTree = "<group>"; };
 		156E1FC12935F0B500B736C2 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		156E1FC42935F1BA00B736C2 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
@@ -63,6 +65,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		155BD097293887EE009FEC7F /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				156E1FC12935F0B500B736C2 /* Router.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		155BD098293887F9009FEC7F /* Builder */ = {
+			isa = PBXGroup;
+			children = (
+				156E1FC42935F1BA00B736C2 /* Builder.swift */,
+			);
+			path = Builder;
+			sourceTree = "<group>";
+		};
 		156E1FB42935ED2B00B736C2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -125,6 +143,7 @@
 		156E1FD22936350500B736C2 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				155BD0942938811D009FEC7F /* SearchResultPresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -172,13 +191,13 @@
 		15F6B4E82927A7C8003F4AA8 /* GitHub Users */ = {
 			isa = PBXGroup;
 			children = (
-				15812E8A292CC3650045C46F /* Service */,
-				15F6B5122927B159003F4AA8 /* Extensions */,
-				15F6B50B2927B0EB003F4AA8 /* Module */,
 				15F6B5072927ACA5003F4AA8 /* Application */,
+				15F6B5122927B159003F4AA8 /* Extensions */,
+				15812E8A292CC3650045C46F /* Service */,
+				155BD097293887EE009FEC7F /* Router */,
+				155BD098293887F9009FEC7F /* Builder */,
+				15F6B50B2927B0EB003F4AA8 /* Module */,
 				15F6B5002927AB4F003F4AA8 /* Supporting files */,
-				156E1FC12935F0B500B736C2 /* Router.swift */,
-				156E1FC42935F1BA00B736C2 /* Builder.swift */,
 			);
 			path = "GitHub Users";
 			sourceTree = "<group>";
@@ -328,6 +347,7 @@
 				15F6B4EA2927A7C8003F4AA8 /* AppDelegate.swift in Sources */,
 				15F6B5142927B172003F4AA8 /* Colors.swift in Sources */,
 				159F330E292F4AEE00072F94 /* SearchResultViewController.swift in Sources */,
+				155BD0952938811D009FEC7F /* SearchResultPresenter.swift in Sources */,
 				156E1FC92935F6AE00B736C2 /* UsersListPresenter.swift in Sources */,
 				15812E78292B7CBF0045C46F /* UserDetailViewController.swift in Sources */,
 				15F6B4EC2927A7C8003F4AA8 /* SceneDelegate.swift in Sources */,

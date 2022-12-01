@@ -10,7 +10,7 @@ import Kingfisher
 
 final class UsersListViewController: UIViewController {
     
-    var presenter: UsersListPresenterProtocol!
+    var presenter: UsersListPresenterProtocol?
     
     private let usersTableView: UITableView = {
         let table = UITableView()
@@ -61,7 +61,7 @@ final class UsersListViewController: UIViewController {
     
     @objc func pullToRefreshList(sender: UIRefreshControl) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: { [weak self] in
-            self?.presenter.users?.shuffle()
+            self?.presenter?.users?.shuffle()
             self?.usersTableView.reloadData()
         })
         sender.endRefreshing()
@@ -113,14 +113,14 @@ final class UsersListViewController: UIViewController {
 
 extension UsersListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.users?.count ?? 0
+        presenter?.users?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.cellId, for: indexPath) as? UserTableViewCell else { return UITableViewCell() }
-        cell.userLogin.text = presenter.users?[indexPath.row].login
-        cell.userId.text = "# \(presenter.users?[indexPath.row].id ?? 0)"
-        let imageURL = URL(string: presenter.users?[indexPath.row].avatarURL ?? "")
+        cell.userLogin.text = presenter?.users?[indexPath.row].login
+        cell.userId.text = "# \(presenter?.users?[indexPath.row].id ?? 0)"
+        let imageURL = URL(string: presenter?.users?[indexPath.row].avatarURL ?? "")
         cell.userAvatar.kf.setImage(with: imageURL)
         return cell
     }
@@ -132,8 +132,8 @@ extension UsersListViewController: UITableViewDataSource {
 
 extension UsersListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userName = presenter.users?[indexPath.row].login ?? ""
-        presenter.didTapOnUserCell(searchName: userName)
+        let userName = presenter?.users?[indexPath.row].login ?? ""
+        presenter?.didTapOnUserCell(searchName: userName)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -147,10 +147,10 @@ extension UsersListViewController: UITableViewDelegate {
         }
         
         if offsetY > contentHeight - scrollView.frame.height {
-            if !presenter.fetchMoreUsers {
-                presenter.fetchMoreUsers = true
+            if !(presenter?.fetchMoreUsers ?? true) {
+                presenter?.fetchMoreUsers = true
                 self.usersTableView.tableFooterView = self.createSpinnerForFooter()
-                self.presenter.getNextPageWithUsers()
+                self.presenter?.getNextPageWithUsers()
                 self.succes()
             }
         }
@@ -163,35 +163,20 @@ extension UsersListViewController: UISearchResultsUpdating {
         guard let searchQuery = searchBar.text,
               !searchQuery.trimmingCharacters(in: .whitespaces).isEmpty,
               searchQuery.trimmingCharacters(in: .whitespaces).count >= 3,
+              
               let searchResultController = searchController.searchResultsController as? SearchResultViewController else { return }
-        
+        let presenter = SearchResultPresenter(view: searchResultController)
+        searchResultController.presenter = presenter
         
         searchResultController.delegate = self
         
-        #warning("need presenter")
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            APICaller.shared.getUserFromSearch(userName: searchQuery) { result in
-                switch result {
-                case .success(let user):
-                    searchResultController.user = user
-                    searchResultController.searchUserTableView.reloadData()
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    searchResultController.user = nil
-                }
-            }
-        }
-        
-        
-        
-
+        searchResultController.presenter?.getUserFromSearch(searchQuery: searchQuery)
     }
 }
 
 extension UsersListViewController: SearchResultViewControllerDelegate {
     func showUserDetail(userName: String) {
-        presenter.didTapOnUserCell(searchName: userName)
+        presenter?.didTapOnUserCell(searchName: userName)
     } 
 }
 

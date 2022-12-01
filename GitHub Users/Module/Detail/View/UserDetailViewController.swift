@@ -11,7 +11,7 @@ import SafariServices
 
 final class UserDetailViewController: UIViewController {
     
-    var presenter: UserDetailPresenterProtocol!
+    var presenter: UserDetailPresenterProtocol?
 
     private let userAvatar: UIImageView = {
         let image = UIImageView()
