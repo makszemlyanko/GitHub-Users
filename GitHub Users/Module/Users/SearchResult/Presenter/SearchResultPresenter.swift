@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SearchResultProtocol: AnyObject {
-    func success()
+    func updateTableView()
     func failure(error: Error)
 }
 
@@ -29,7 +29,7 @@ final class SearchResultPresenter: SearchResultPresenterProtocol {
     
     func getUserFromSearch(searchQuery: String) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            APICaller.shared.getUserFromSearch(userName: searchQuery) { result in
+            Network.shared.getUserFromSearch(for: searchQuery) { result in
                 switch result {
                 case .success(let user):
                     self?.user = user
@@ -37,7 +37,7 @@ final class SearchResultPresenter: SearchResultPresenterProtocol {
                     self?.user = nil
                     self?.view?.failure(error: error)
                 }
-                self?.view?.success()
+                self?.view?.updateTableView()
             }
         }
     }

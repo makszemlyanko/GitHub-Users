@@ -8,13 +8,13 @@
 import Foundation
 
 protocol UsersListProtocol: AnyObject {
-    func succes()
+    func updateTableView()
     func failure(error: Error)
 }
 
 protocol UsersListPresenterProtocol {
     var users: [User]? { get set }
-    var searchOffset: Int { get set }
+    var pagination: Int { get set }
     var fetchMoreUsers: Bool { get set }
     init(view: UsersListProtocol, router: RouterProtocol)
     func getUsersList()
@@ -27,7 +27,7 @@ final class UsersListPresenter: UsersListPresenterProtocol {
     weak var view: UsersListProtocol?
     var users: [User]?
     var router: RouterProtocol
-    var searchOffset = 0
+    var pagination = 0
     var fetchMoreUsers = false
     
     init(view: UsersListProtocol, router: RouterProtocol) {
@@ -37,13 +37,13 @@ final class UsersListPresenter: UsersListPresenterProtocol {
     }
     
     func getUsersList() {
-        DispatchQueue.main.async {
-            APICaller.shared.getListOfAllUsers(searchOffset: self.searchOffset) { [weak self] response in
+        DispatchQueue.main.async { [weak self] in
+            Network.shared.getListOfAllUsers(pagination: self?.pagination ?? 0) { [weak self] response in
                 switch response {
                 case .success(let users):
                     self?.users = users
-                    self?.searchOffset = users.last?.id ?? 0
-                    self?.view?.succes()
+                    self?.pagination = users.last?.id ?? 0
+                    self?.view?.updateTableView()
                 case .failure(let error):
                     self?.view?.failure(error: error)
                 }
@@ -53,13 +53,13 @@ final class UsersListPresenter: UsersListPresenterProtocol {
     
     func getNextPageWithUsers() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            APICaller.shared.getListOfAllUsers(searchOffset: self?.searchOffset ?? 0) { response in
+            Network.shared.getListOfAllUsers(pagination: self?.pagination ?? 0) { response in
                 switch response {
                 case .success(let nextUsersPage):
                     self?.users? += nextUsersPage
-                    self?.searchOffset = nextUsersPage.last?.id ?? 30
+                    self?.pagination = nextUsersPage.last?.id ?? 30
                     self?.fetchMoreUsers = false
-                    self?.view?.succes()
+                    self?.view?.updateTableView()
                 case .failure(let error):
                     self?.view?.failure(error: error)
                 }

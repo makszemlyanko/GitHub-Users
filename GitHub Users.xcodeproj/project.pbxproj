@@ -14,7 +14,7 @@
 		156E1FC92935F6AE00B736C2 /* UsersListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E1FC82935F6AE00B736C2 /* UsersListPresenter.swift */; };
 		15812E66292B55B70045C46F /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E65292B55B70045C46F /* UserTableViewCell.swift */; };
 		15812E78292B7CBF0045C46F /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E77292B7CBF0045C46F /* UserDetailViewController.swift */; };
-		15812E7E292BA4870045C46F /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E7D292BA4870045C46F /* APICaller.swift */; };
+		15812E7E292BA4870045C46F /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E7D292BA4870045C46F /* Network.swift */; };
 		15812E82292CB4430045C46F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 15812E81292CB4430045C46F /* Kingfisher */; };
 		15812E86292CBB270045C46F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 15812E85292CBB270045C46F /* Alamofire */; };
 		15812E8F292CC39F0045C46F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E8E292CC39F0045C46F /* User.swift */; };
@@ -37,7 +37,7 @@
 		156E1FC82935F6AE00B736C2 /* UsersListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListPresenter.swift; sourceTree = "<group>"; };
 		15812E65292B55B70045C46F /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		15812E77292B7CBF0045C46F /* UserDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
-		15812E7D292BA4870045C46F /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
+		15812E7D292BA4870045C46F /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		15812E8E292CC39F0045C46F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		159F330A292E30CA00072F94 /* UserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetail.swift; sourceTree = "<group>"; };
 		159F330D292F4AEE00072F94 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
@@ -151,17 +151,9 @@
 		15812E8A292CC3650045C46F /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				15812E8B292CC3870045C46F /* Network */,
+				15812E7D292BA4870045C46F /* Network.swift */,
 			);
 			path = Service;
-			sourceTree = "<group>";
-		};
-		15812E8B292CC3870045C46F /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				15812E7D292BA4870045C46F /* APICaller.swift */,
-			);
-			path = Network;
 			sourceTree = "<group>";
 		};
 		15812E8D292CC3910045C46F /* Model */ = {
@@ -358,7 +350,7 @@
 				156E1FC52935F1BA00B736C2 /* Builder.swift in Sources */,
 				15F6B5042927ABD4003F4AA8 /* UsersListViewController.swift in Sources */,
 				159F330B292E30CA00072F94 /* UserDetail.swift in Sources */,
-				15812E7E292BA4870045C46F /* APICaller.swift in Sources */,
+				15812E7E292BA4870045C46F /* Network.swift in Sources */,
 				156E1FC22935F0B500B736C2 /* Router.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

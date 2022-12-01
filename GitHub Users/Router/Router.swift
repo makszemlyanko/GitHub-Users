@@ -10,9 +10,7 @@ import UIKit
 protocol RouterProtocol {
     var navController: UINavigationController { get set }
     var builder: BuilderProtocol { get set }
-    
     init(navController: UINavigationController, builder: BuilderProtocol)
-    
     func initialViewController()
     func pushToUserDetail(searchName: String)
 }
@@ -37,7 +35,3 @@ final class Router: RouterProtocol {
         navController.pushViewController(userDetailVC, animated: true)
     }
 }
-
-
-
-

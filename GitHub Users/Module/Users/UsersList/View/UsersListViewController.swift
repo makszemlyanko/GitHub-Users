@@ -12,6 +12,8 @@ final class UsersListViewController: UIViewController {
     
     var presenter: UsersListPresenterProtocol?
     
+    // MARK: - Properties
+    
     private let usersTableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .backgroundDarkGray
@@ -67,6 +69,8 @@ final class UsersListViewController: UIViewController {
         sender.endRefreshing()
     }
     
+    // MARK: - Life cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUsersTableView()
@@ -83,6 +87,8 @@ final class UsersListViewController: UIViewController {
         super.viewWillAppear(animated)
         returnToTopButton.frame = CGRect(x: view.frame.size.width - 70, y: view.frame.size.height - 70, width: 44, height: 44)
     }
+    
+    // MARK: - Configure TableView
     
     private func configureUsersTableView() {
         view.addSubview(usersTableView)
@@ -111,6 +117,8 @@ final class UsersListViewController: UIViewController {
     }
 }
 
+// MARK: - Data Source
+
 extension UsersListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         presenter?.users?.count ?? 0
@@ -129,6 +137,8 @@ extension UsersListViewController: UITableViewDataSource {
         120
     }
 }
+
+// MARK: - Delegate
 
 extension UsersListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -151,11 +161,19 @@ extension UsersListViewController: UITableViewDelegate {
                 presenter?.fetchMoreUsers = true
                 self.usersTableView.tableFooterView = self.createSpinnerForFooter()
                 self.presenter?.getNextPageWithUsers()
-                self.succes()
+                self.updateTableView()
             }
         }
     }
 }
+
+extension UsersListViewController: SearchResultViewControllerDelegate {
+    func showUserDetail(userName: String) {
+        presenter?.didTapOnUserCell(searchName: userName)
+    }
+}
+
+// MARK: - Search
 
 extension UsersListViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
@@ -174,14 +192,10 @@ extension UsersListViewController: UISearchResultsUpdating {
     }
 }
 
-extension UsersListViewController: SearchResultViewControllerDelegate {
-    func showUserDetail(userName: String) {
-        presenter?.didTapOnUserCell(searchName: userName)
-    } 
-}
+// MARK: - Presenter's protocol
 
 extension UsersListViewController: UsersListProtocol {
-    func succes() {
+    func updateTableView() {
         usersTableView.reloadData()
     }
     

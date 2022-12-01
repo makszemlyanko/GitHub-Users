@@ -34,7 +34,7 @@ final class UserDetailPresenter: UserDetailPresenterProtocol {
     }
     
     func getUserDetail() {
-        APICaller.shared.getUserDetail(userName: self.userSearchName ?? "") { [weak self] result in
+        Network.shared.getUserDetail(for: self.userSearchName ?? "") { [weak self] result in
             switch result {
             case .success(let user):
                 self?.userDetail = user

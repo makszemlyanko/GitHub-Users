@@ -15,14 +15,18 @@ final class SearchResultViewController: UIViewController {
     
     var presenter: SearchResultPresenterProtocol?
     
+    // MARK: - Properties
+    
     weak var delegate: SearchResultViewControllerDelegate?
     
-    let searchUserTableView: UITableView = {
+    let searchResultTableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = UIColor.backgroundDarkGray
         table.register(UserTableViewCell.self, forCellReuseIdentifier: UserTableViewCell.cellId)
         return table
     }()
+    
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,16 +35,18 @@ final class SearchResultViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        searchUserTableView.frame = view.bounds
-        searchUserTableView.separatorStyle = .none
+        searchResultTableView.frame = view.bounds
+        searchResultTableView.separatorStyle = .none
     }
     
     private func configureSearchUserTableView() {
-        view.addSubview(searchUserTableView)
-        searchUserTableView.dataSource = self
-        searchUserTableView.delegate = self
+        view.addSubview(searchResultTableView)
+        searchResultTableView.dataSource = self
+        searchResultTableView.delegate = self
     }
 }
+
+// MARK: - Data Source
 
 extension SearchResultViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -73,6 +79,8 @@ extension SearchResultViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - Delegate
+
 extension SearchResultViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let userName = presenter?.user?.login
@@ -80,9 +88,11 @@ extension SearchResultViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - Presenter's protocol
+
 extension SearchResultViewController: SearchResultProtocol {
-    func success() {
-        searchUserTableView.reloadData()
+    func updateTableView() {
+        searchResultTableView.reloadData()
     }
     
     func failure(error: Error) {

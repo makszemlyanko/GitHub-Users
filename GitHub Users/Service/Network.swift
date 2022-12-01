@@ -12,24 +12,24 @@ struct Constants {
     static let listOfAllUsersURL = "https://api.github.com/users"
 }
 
-final class APICaller {
+final class Network {
     
-    static let shared = APICaller()
+    static let shared = Network()
     
-    func getListOfAllUsers(searchOffset: Int, completion: @escaping (Result<[User], Error>) -> Void) {
+    func getListOfAllUsers(pagination: Int, completion: @escaping (Result<[User], Error>) -> Void) {
         guard let url = URL(string: Constants.listOfAllUsersURL) else {return}
-        let parameters = ["per_page": 30, "since": searchOffset]
+        let parameters = ["per_page": 30, "since": pagination]
         AF.request(url, method: .get, parameters: parameters).validate().responseDecodable(of: [User].self) { response in
             guard let data = response.value, response.error == nil else { return completion(.failure(response.error!)) }
             completion(.success(data))
         }
     }
     
-    func getUserFromSearch(userName: String, completion: @escaping (Result<User, Error>) -> Void) {
+    func getUserFromSearch(for userName: String, completion: @escaping (Result<User, Error>) -> Void) {
         createDataTask(userName: userName, model: User.self, completion: completion)
     }
     
-    func getUserDetail(userName: String, completion: @escaping (Result<UserDetail, Error>) -> Void) {
+    func getUserDetail(for userName: String, completion: @escaping (Result<UserDetail, Error>) -> Void) {
         createDataTask(userName: userName, model: UserDetail.self, completion: completion)
     }
     

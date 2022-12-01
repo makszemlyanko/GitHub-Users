@@ -12,6 +12,8 @@ import SafariServices
 final class UserDetailViewController: UIViewController {
     
     var presenter: UserDetailPresenterProtocol?
+    
+    // MARK: - Properties
 
     private let userAvatar: UIImageView = {
         let image = UIImageView()
@@ -85,7 +87,7 @@ final class UserDetailViewController: UIViewController {
         return label
     }()
     
-    private let gitHubBottomImage: UIImageView = {
+    private let githubBottomImage: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "title")
         return image
@@ -129,13 +131,17 @@ final class UserDetailViewController: UIViewController {
         present(vc, animated: true)
     }
     
+    // MARK: - Life cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundDarkGray
-        configureLayout()
+        configureUserDetailLayout()
     }
     
-    private func configureLayout() {
+    // MARK: - Layout
+    
+    private func configureUserDetailLayout() {
         setupUserCardViewConstraints()
         setupUserImageConstraints()
         setupUserNameConstraints()
@@ -239,16 +245,18 @@ final class UserDetailViewController: UIViewController {
     }
     
     private func setupGitHubBottomImageConstraints() {
-        gitHubBottomImage.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(gitHubBottomImage)
+        githubBottomImage.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(githubBottomImage)
         NSLayoutConstraint.activate([
-            gitHubBottomImage.topAnchor.constraint(equalTo: userCardView.bottomAnchor, constant: 60),
-            gitHubBottomImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            gitHubBottomImage.widthAnchor.constraint(equalToConstant: 44),
-            gitHubBottomImage.heightAnchor.constraint(equalToConstant: 44)
+            githubBottomImage.topAnchor.constraint(equalTo: userCardView.bottomAnchor, constant: 60),
+            githubBottomImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            githubBottomImage.widthAnchor.constraint(equalToConstant: 44),
+            githubBottomImage.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
 }
+
+// MARK: - Presenter's protocol
 
 extension UserDetailViewController: UserDetailProtocol {
     func setUserDetail(detail: UserDetail?) {
