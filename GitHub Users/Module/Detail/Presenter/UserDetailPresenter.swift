@@ -34,13 +34,15 @@ final class UserDetailPresenter: UserDetailPresenterProtocol {
     }
     
     func getUserDetail() {
-        Network.shared.getUserDetail(for: self.userSearchName ?? "") { [weak self] result in
-            switch result {
-            case .success(let user):
-                self?.userDetail = user
-                self?.view?.setUserDetail(detail: self?.userDetail)
-            case .failure(let error):
-                self?.view?.failure(error: error)
+        DispatchQueue.main.async { [weak self] in
+            Network.shared.getUserDetail(for: self?.userSearchName ?? "") { result in
+                switch result {
+                case .success(let user):
+                    self?.userDetail = user
+                    self?.view?.setUserDetail(detail: self?.userDetail)
+                case .failure(let error):
+                    self?.view?.failure(error: error)
+                }
             }
         }
     }

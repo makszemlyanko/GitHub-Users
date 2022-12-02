@@ -23,7 +23,7 @@ protocol UsersListPresenterProtocol {
 }
 
 final class UsersListPresenter: UsersListPresenterProtocol {
-   
+    
     weak var view: UsersListProtocol?
     var users: [User]?
     var router: RouterProtocol
@@ -38,11 +38,12 @@ final class UsersListPresenter: UsersListPresenterProtocol {
     
     func getUsersList() {
         DispatchQueue.main.async { [weak self] in
-            Network.shared.getListOfAllUsers(pagination: self?.pagination ?? 0) { [weak self] response in
+            Network.shared.getListOfAllUsers(pagination: self?.pagination ?? 0) { response in
                 switch response {
                 case .success(let users):
                     self?.users = users
                     self?.pagination = users.last?.id ?? 0
+                    
                     self?.view?.updateTableView()
                 case .failure(let error):
                     self?.view?.failure(error: error)

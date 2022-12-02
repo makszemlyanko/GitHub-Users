@@ -15,8 +15,6 @@ final class SearchResultViewController: UIViewController {
     
     var presenter: SearchResultPresenterProtocol?
     
-    // MARK: - Properties
-    
     weak var delegate: SearchResultViewControllerDelegate?
     
     let searchResultTableView: UITableView = {

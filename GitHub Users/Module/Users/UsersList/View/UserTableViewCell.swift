@@ -11,8 +11,6 @@ final class UserTableViewCell: UITableViewCell {
     
     static let cellId = "UserTableViewCell"
     
-    // MARK: - Properties
-    
     let userAvatar: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFill

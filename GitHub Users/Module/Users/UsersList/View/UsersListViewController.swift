@@ -12,8 +12,6 @@ final class UsersListViewController: UIViewController {
     
     var presenter: UsersListPresenterProtocol?
     
-    // MARK: - Properties
-    
     private let usersTableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .backgroundDarkGray
@@ -33,6 +31,8 @@ final class UsersListViewController: UIViewController {
         return controller
     }()
     
+    // MARK: - Floating button
+    
     private lazy var returnToTopButton: UIButton = {
         let button = UIButton(frame: .init(x: 0, y: 0, width: 60, height: 60))
         let image = UIImage(systemName: "arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
@@ -50,6 +50,8 @@ final class UsersListViewController: UIViewController {
         let indexPath = IndexPath(row: NSNotFound, section: 0)
         usersTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
+    
+    // MARK: - Pull-refresh
     
     private lazy var refreshControl: UIRefreshControl = {
         let rc = UIRefreshControl()

@@ -12,8 +12,6 @@ import SafariServices
 final class UserDetailViewController: UIViewController {
     
     var presenter: UserDetailPresenterProtocol?
-    
-    // MARK: - Properties
 
     private let userAvatar: UIImageView = {
         let image = UIImageView()
@@ -260,19 +258,17 @@ final class UserDetailViewController: UIViewController {
 
 extension UserDetailViewController: UserDetailProtocol {
     func setUserDetail(detail: UserDetail?) {
-        DispatchQueue.main.async { [weak self] in
         guard let imageURL = URL(string: detail?.avatarURL ?? "") else { return }
-            self?.userAvatar.kf.setImage(with: imageURL)
-            self?.userName.text = detail?.name
-            self?.userLogin.text = detail?.login
-            self?.userLocation.text = detail?.location
-            self?.userOrganization.text = detail?.company
-            self?.userEmail.text = detail?.email
-            self?.followers.text = "\(String(detail?.followers ?? 0)) followers"
-            self?.following.text = "\(String(detail?.following ?? 0)) following"
-            self?.registrationDate.text = "On GitHub since \(String(describing: detail?.createdAt.convertToDisplayFormat() ?? ""))"
-            self?.profileURL = detail?.htmlUrl ?? ""
-        }
+        self.userAvatar.kf.setImage(with: imageURL)
+        self.userName.text = detail?.name
+        self.userLogin.text = detail?.login
+        self.userLocation.text = detail?.location
+        self.userOrganization.text = detail?.company
+        self.userEmail.text = detail?.email
+        self.followers.text = "\(String(detail?.followers ?? 0)) followers"
+        self.following.text = "\(String(detail?.following ?? 0)) following"
+        self.registrationDate.text = "On GitHub since \(String(describing: detail?.createdAt.convertToDisplayFormat() ?? ""))"
+        self.profileURL = detail?.htmlUrl ?? ""
     }
     
     func failure(error: Error) {
