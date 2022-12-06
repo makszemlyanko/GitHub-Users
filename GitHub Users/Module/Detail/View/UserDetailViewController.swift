@@ -143,7 +143,7 @@ final class UserDetailViewController: UIViewController {
         setupUserCardViewConstraints()
         setupUserImageConstraints()
         setupUserNameConstraints()
-        setupLoginLabelConstraints()
+        setupUserLoginConstraints()
         setupContactsStackViewConstraints()
         setupFollowersStackViewContraints()
         setupProfileButtonConstraints()
@@ -184,7 +184,7 @@ final class UserDetailViewController: UIViewController {
         ])
     }
     
-    private func setupLoginLabelConstraints() {
+    private func setupUserLoginConstraints() {
         userCardView.addSubview(userLogin)
         userLogin.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
