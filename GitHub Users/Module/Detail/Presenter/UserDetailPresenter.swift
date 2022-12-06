@@ -8,7 +8,7 @@
 import Foundation
 
 protocol UserDetailProtocol: AnyObject {
-    func setUserDetail(detail: UserDetail?)
+    func success()
     func failure(error: Error)
 }
 
@@ -39,7 +39,7 @@ final class UserDetailPresenter: UserDetailPresenterProtocol {
                 switch result {
                 case .success(let user):
                     self?.userDetail = user
-                    self?.view?.setUserDetail(detail: self?.userDetail)
+                    self?.view?.success()
                 case .failure(let error):
                     self?.view?.failure(error: error)
                 }

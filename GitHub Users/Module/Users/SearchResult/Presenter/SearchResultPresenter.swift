@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SearchResultProtocol: AnyObject {
-    func updateTableView()
+    func success()
     func failure(error: Error)
 }
 
@@ -37,7 +37,7 @@ final class SearchResultPresenter: SearchResultPresenterProtocol {
                     self?.user = nil
                     self?.view?.failure(error: error)
                 }
-                self?.view?.updateTableView()
+                self?.view?.success()
             }
         }
     }

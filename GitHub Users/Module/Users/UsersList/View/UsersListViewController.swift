@@ -163,7 +163,7 @@ extension UsersListViewController: UITableViewDelegate {
                 presenter?.fetchMoreUsers = true
                 self.usersTableView.tableFooterView = self.createSpinnerForFooter()
                 self.presenter?.getNextPageWithUsers()
-                self.updateTableView()
+                self.success()
             }
         }
     }
@@ -197,7 +197,7 @@ extension UsersListViewController: UISearchResultsUpdating {
 // MARK: - Presenter's protocol
 
 extension UsersListViewController: UsersListProtocol {
-    func updateTableView() {
+    func success() {
         usersTableView.reloadData()
     }
     

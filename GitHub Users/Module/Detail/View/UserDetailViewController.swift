@@ -257,18 +257,18 @@ final class UserDetailViewController: UIViewController {
 // MARK: - Presenter's protocol
 
 extension UserDetailViewController: UserDetailProtocol {
-    func setUserDetail(detail: UserDetail?) {
-        guard let imageURL = URL(string: detail?.avatarURL ?? "") else { return }
+    func success() {
+        guard let imageURL = URL(string: presenter?.userDetail?.avatarURL ?? "") else { return }
         self.userAvatar.kf.setImage(with: imageURL)
-        self.userName.text = detail?.name
-        self.userLogin.text = detail?.login
-        self.userLocation.text = detail?.location
-        self.userOrganization.text = detail?.company
-        self.userEmail.text = detail?.email
-        self.followers.text = "\(String(detail?.followers ?? 0)) followers"
-        self.following.text = "\(String(detail?.following ?? 0)) following"
-        self.registrationDate.text = "On GitHub since \(String(describing: detail?.createdAt.convertToDisplayFormat() ?? ""))"
-        self.profileURL = detail?.htmlUrl ?? ""
+        self.userName.text = presenter?.userDetail?.name
+        self.userLogin.text = presenter?.userDetail?.login
+        self.userLocation.text = presenter?.userDetail?.location
+        self.userOrganization.text = presenter?.userDetail?.company
+        self.userEmail.text = presenter?.userDetail?.email
+        self.followers.text = "\(String(presenter?.userDetail?.followers ?? 0)) followers"
+        self.following.text = "\(String(presenter?.userDetail?.following ?? 0)) following"
+        self.registrationDate.text = "On GitHub since \(String(describing: presenter?.userDetail?.createdAt.convertToDisplayFormat() ?? ""))"
+        self.profileURL = presenter?.userDetail?.htmlUrl ?? ""
     }
     
     func failure(error: Error) {

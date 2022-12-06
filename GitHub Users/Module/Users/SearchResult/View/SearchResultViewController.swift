@@ -89,7 +89,7 @@ extension SearchResultViewController: UITableViewDelegate {
 // MARK: - Presenter's protocol
 
 extension SearchResultViewController: SearchResultProtocol {
-    func updateTableView() {
+    func success() {
         searchResultTableView.reloadData()
     }
     

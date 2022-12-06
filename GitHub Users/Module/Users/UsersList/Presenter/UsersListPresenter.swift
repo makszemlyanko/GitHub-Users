@@ -8,7 +8,7 @@
 import Foundation
 
 protocol UsersListProtocol: AnyObject {
-    func updateTableView()
+    func success()
     func failure(error: Error)
 }
 
@@ -44,7 +44,7 @@ final class UsersListPresenter: UsersListPresenterProtocol {
                     self?.users = users
                     self?.pagination = users.last?.id ?? 0
                     
-                    self?.view?.updateTableView()
+                    self?.view?.success()
                 case .failure(let error):
                     self?.view?.failure(error: error)
                 }
@@ -60,7 +60,7 @@ final class UsersListPresenter: UsersListPresenterProtocol {
                     self?.users? += nextUsersPage
                     self?.pagination = nextUsersPage.last?.id ?? 30
                     self?.fetchMoreUsers = false
-                    self?.view?.updateTableView()
+                    self?.view?.success()
                 case .failure(let error):
                     self?.view?.failure(error: error)
                 }
