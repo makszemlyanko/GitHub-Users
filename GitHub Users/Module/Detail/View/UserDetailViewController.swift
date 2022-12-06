@@ -122,7 +122,7 @@ final class UserDetailViewController: UIViewController {
         return button
     }()
     
-    @objc func didTapProfileButton() {
+    @objc private func didTapProfileButton() {
         let profileUrl = profileURL
         guard let url = URL(string: profileUrl) else { return }
         let vc = SFSafariViewController(url: url)

@@ -46,7 +46,7 @@ final class UsersListViewController: UIViewController {
         return button
     }()
     
-    @objc func didTapUpButton() {
+    @objc private func didTapUpButton() {
         let indexPath = IndexPath(row: NSNotFound, section: 0)
         usersTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
@@ -63,7 +63,7 @@ final class UsersListViewController: UIViewController {
         return rc
     }()
     
-    @objc func pullToRefreshList(sender: UIRefreshControl) {
+    @objc private func pullToRefreshList(sender: UIRefreshControl) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: { [weak self] in
             self?.presenter?.users?.shuffle()
             self?.usersTableView.reloadData()
