@@ -38,7 +38,7 @@ final class UsersListPresenter: UsersListPresenterProtocol {
     
     func getUsersList() {
         DispatchQueue.main.async { [weak self] in
-            Network.shared.getListOfAllUsers(pagination: self?.pagination ?? 0) { response in
+            Network.shared.getListOfAllUsers(with: self?.pagination ?? 0) { response in
                 switch response {
                 case .success(let users):
                     self?.users = users
@@ -54,7 +54,7 @@ final class UsersListPresenter: UsersListPresenterProtocol {
     
     func getNextPageWithUsers() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            Network.shared.getListOfAllUsers(pagination: self?.pagination ?? 0) { response in
+            Network.shared.getListOfAllUsers(with: self?.pagination ?? 0) { response in
                 switch response {
                 case .success(let nextUsersPage):
                     self?.users? += nextUsersPage

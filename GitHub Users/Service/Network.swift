@@ -16,27 +16,24 @@ final class Network {
     
     static let shared = Network()
     
-    func getListOfAllUsers(pagination: Int, completion: @escaping (Result<[User], Error>) -> Void) {
+    func getListOfAllUsers(with pagination: Int, completion: @escaping (Result<[User], Error>) -> Void) {
         guard let url = URL(string: Constants.listOfAllUsersURL) else {return}
         let parameters = ["per_page": 30, "since": pagination]
-        AF.request(url, method: .get, parameters: parameters).validate().responseDecodable(of: [User].self) { response in
-            guard let data = response.value, response.error == nil else { return completion(.failure(response.error!)) }
-            completion(.success(data))
-        }
+        createDataTask(url: url, parameters: parameters, completion: completion)
     }
     
     func getUserFromSearch(for userName: String, completion: @escaping (Result<User, Error>) -> Void) {
-        createDataTask(userName: userName, model: User.self, completion: completion)
+        guard let url = URL(string: Constants.listOfAllUsersURL + "/\(userName)") else { return }
+        createDataTask(url: url, parameters: nil, completion: completion)
     }
     
     func getUserDetail(for userName: String, completion: @escaping (Result<UserDetail, Error>) -> Void) {
-        createDataTask(userName: userName, model: UserDetail.self, completion: completion)
+        guard let url = URL(string: Constants.listOfAllUsersURL + "/\(userName)") else { return }
+        createDataTask(url: url, parameters: nil, completion: completion)
     }
     
-    private func createDataTask<T: Decodable>(userName: String, model: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
-        let urlString = Constants.listOfAllUsersURL + "/\(userName)"
-        guard let url = URL(string: urlString) else { return }
-        AF.request(url, method: .get).validate().responseDecodable(of: model.self) { response in
+    private func createDataTask<T: Decodable>(url: URL, parameters: [String: Int]?, completion: @escaping (Result<T, Error>) -> Void) {
+        AF.request(url, method: .get, parameters: parameters).validate().responseDecodable(of: T.self) { response in
             guard let data = response.value, response.error == nil else { return completion(.failure(response.error!)) }
             completion(.success(data))
         }
