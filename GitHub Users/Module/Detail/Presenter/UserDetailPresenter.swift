@@ -14,8 +14,6 @@ protocol UserDetailProtocol: AnyObject {
 
 protocol UserDetailPresenterProtocol {
     var userDetail: UserDetail? { get set }
-    var userSearchName: String? { get set }
-    init(view: UserDetailProtocol, searchName: String, router: RouterProtocol)
     func getUserDetail()
 }
 

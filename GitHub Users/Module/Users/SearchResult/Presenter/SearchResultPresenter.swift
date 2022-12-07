@@ -14,7 +14,6 @@ protocol SearchResultProtocol: AnyObject {
 
 protocol SearchResultPresenterProtocol {
     var user: User? { get set }
-    init(view: SearchResultProtocol?)
     func getUserFromSearch(searchQuery: String)
 }
 

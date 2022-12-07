@@ -14,9 +14,7 @@ protocol UsersListProtocol: AnyObject {
 
 protocol UsersListPresenterProtocol {
     var users: [User]? { get set }
-    var pagination: Int { get set }
     var fetchMoreUsers: Bool { get set }
-    init(view: UsersListProtocol, router: RouterProtocol)
     func getUsersList()
     func getNextPageWithUsers()
     func didTapOnUserCell(searchName: String)
@@ -26,7 +24,7 @@ final class UsersListPresenter: UsersListPresenterProtocol {
     
     weak var view: UsersListProtocol?
     var users: [User]?
-    var router: RouterProtocol
+    let router: RouterProtocol
     var pagination = 0
     var fetchMoreUsers = false
     
