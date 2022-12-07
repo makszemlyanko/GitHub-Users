@@ -10,7 +10,7 @@
 		155BD0952938811D009FEC7F /* SearchResultPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155BD0942938811D009FEC7F /* SearchResultPresenter.swift */; };
 		156E1FBF2935EE9F00B736C2 /* UserDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E1FBE2935EE9F00B736C2 /* UserDetailPresenter.swift */; };
 		156E1FC22935F0B500B736C2 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E1FC12935F0B500B736C2 /* Router.swift */; };
-		156E1FC52935F1BA00B736C2 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E1FC42935F1BA00B736C2 /* Builder.swift */; };
+		156E1FC52935F1BA00B736C2 /* Assembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E1FC42935F1BA00B736C2 /* Assembly.swift */; };
 		156E1FC92935F6AE00B736C2 /* UsersListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E1FC82935F6AE00B736C2 /* UsersListPresenter.swift */; };
 		15812E66292B55B70045C46F /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E65292B55B70045C46F /* UserTableViewCell.swift */; };
 		15812E78292B7CBF0045C46F /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15812E77292B7CBF0045C46F /* UserDetailViewController.swift */; };
@@ -33,7 +33,7 @@
 		155BD0942938811D009FEC7F /* SearchResultPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultPresenter.swift; sourceTree = "<group>"; };
 		156E1FBE2935EE9F00B736C2 /* UserDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailPresenter.swift; sourceTree = "<group>"; };
 		156E1FC12935F0B500B736C2 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
-		156E1FC42935F1BA00B736C2 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
+		156E1FC42935F1BA00B736C2 /* Assembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembly.swift; sourceTree = "<group>"; };
 		156E1FC82935F6AE00B736C2 /* UsersListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListPresenter.swift; sourceTree = "<group>"; };
 		15812E65292B55B70045C46F /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		15812E77292B7CBF0045C46F /* UserDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
@@ -71,14 +71,6 @@
 				156E1FC12935F0B500B736C2 /* Router.swift */,
 			);
 			path = Router;
-			sourceTree = "<group>";
-		};
-		155BD098293887F9009FEC7F /* Builder */ = {
-			isa = PBXGroup;
-			children = (
-				156E1FC42935F1BA00B736C2 /* Builder.swift */,
-			);
-			path = Builder;
 			sourceTree = "<group>";
 		};
 		156E1FB42935ED2B00B736C2 /* Model */ = {
@@ -164,6 +156,14 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		1587D3A829408ED900974B5C /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				156E1FC42935F1BA00B736C2 /* Assembly.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
 		15F6B4DD2927A7C8003F4AA8 = {
 			isa = PBXGroup;
 			children = (
@@ -186,9 +186,9 @@
 				15F6B5072927ACA5003F4AA8 /* Application */,
 				15F6B5122927B159003F4AA8 /* Extensions */,
 				15812E8A292CC3650045C46F /* Service */,
-				155BD097293887EE009FEC7F /* Router */,
-				155BD098293887F9009FEC7F /* Builder */,
 				15F6B50B2927B0EB003F4AA8 /* Module */,
+				1587D3A829408ED900974B5C /* Assembly */,
+				155BD097293887EE009FEC7F /* Router */,
 				15F6B5002927AB4F003F4AA8 /* Supporting files */,
 			);
 			path = "GitHub Users";
@@ -347,7 +347,7 @@
 				156E1FBF2935EE9F00B736C2 /* UserDetailPresenter.swift in Sources */,
 				159F331A2930BA0D00072F94 /* ConvertDate.swift in Sources */,
 				15812E66292B55B70045C46F /* UserTableViewCell.swift in Sources */,
-				156E1FC52935F1BA00B736C2 /* Builder.swift in Sources */,
+				156E1FC52935F1BA00B736C2 /* Assembly.swift in Sources */,
 				15F6B5042927ABD4003F4AA8 /* UsersListViewController.swift in Sources */,
 				159F330B292E30CA00072F94 /* UserDetail.swift in Sources */,
 				15812E7E292BA4870045C46F /* Network.swift in Sources */,

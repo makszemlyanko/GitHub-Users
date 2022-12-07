@@ -18,8 +18,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let navController = UINavigationController()
         navController.navigationBar.standardAppearance = createNavBarAppearance()
         navController.navigationBar.scrollEdgeAppearance = navController.navigationBar.standardAppearance
-        let builder = Builder()
-        let router = Router(navController: navController, builder: builder)
+        let assembly = Assembly()
+        let router = Router(navController: navController, assembly: assembly)
         router.initialViewController()
         window?.rootViewController = navController
         window?.makeKeyAndVisible()

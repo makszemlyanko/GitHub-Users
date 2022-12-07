@@ -15,20 +15,20 @@ protocol RouterProtocol {
 final class Router: RouterProtocol {
     
     let navController: UINavigationController
-    let builder: BuilderProtocol
+    let assembly: AssemblyProtocol
     
-    init(navController: UINavigationController, builder: BuilderProtocol) {
+    init(navController: UINavigationController, assembly: AssemblyProtocol) {
         self.navController = navController
-        self.builder = builder
+        self.assembly = assembly
     }
     
     func initialViewController() {
-        let usersListVC = builder.createUsersListModule(router: self)
+        let usersListVC = assembly.createUsersListModule(router: self)
         navController.setViewControllers([usersListVC], animated: true)
     }
     
     func pushToUserDetail(searchName: String) {
-        let userDetailVC = builder.createUserDetailModule(searchName: searchName, router: self)
+        let userDetailVC = assembly.createUserDetailModule(searchName: searchName, router: self)
         navController.pushViewController(userDetailVC, animated: true)
     }
 }
