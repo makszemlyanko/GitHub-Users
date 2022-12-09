@@ -86,7 +86,7 @@ extension SearchResultViewController: UITableViewDelegate {
     }
 }
 
-// MARK: - Presenter's protocol
+// MARK: - Update view
 
 extension SearchResultViewController: SearchResultProtocol {
     func success() {

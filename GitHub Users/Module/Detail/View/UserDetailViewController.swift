@@ -254,7 +254,7 @@ final class UserDetailViewController: UIViewController {
     }
 }
 
-// MARK: - Presenter's protocol
+// MARK: - Configure view cell
 
 extension UserDetailViewController: UserDetailProtocol {
     func success() {

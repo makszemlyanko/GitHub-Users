@@ -194,7 +194,7 @@ extension UsersListViewController: UISearchResultsUpdating {
     }
 }
 
-// MARK: - Presenter's protocol
+// MARK: - Update view
 
 extension UsersListViewController: UsersListProtocol {
     func success() {
