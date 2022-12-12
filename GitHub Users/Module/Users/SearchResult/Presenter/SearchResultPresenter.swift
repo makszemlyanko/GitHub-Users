@@ -27,8 +27,8 @@ final class SearchResultPresenter: SearchResultPresenterProtocol {
     }
     
     func getUserFromSearch(searchQuery: String) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            Network.shared.getUserFromSearch(for: searchQuery) { result in
+        Network.shared.getUserFromSearch(for: searchQuery) { [weak self] result in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 switch result {
                 case .success(let user):
                     self?.user = user

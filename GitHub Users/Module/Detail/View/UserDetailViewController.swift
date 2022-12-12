@@ -196,10 +196,10 @@ final class UserDetailViewController: UIViewController {
     }
     
     private func setupContactsStackViewConstraints() {
-        contactsStackView.translatesAutoresizingMaskIntoConstraints = false
         contactsStackView.addArrangedSubview(userLocation)
         contactsStackView.addArrangedSubview(userOrganization)
         contactsStackView.addArrangedSubview(userEmail)
+        contactsStackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(contactsStackView)
         NSLayoutConstraint.activate([
             contactsStackView.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor),
@@ -209,8 +209,8 @@ final class UserDetailViewController: UIViewController {
     }
     
     private func setupProfileButtonConstraints() {
-        profileButton.translatesAutoresizingMaskIntoConstraints = false
         userCardView.addSubview(profileButton)
+        profileButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             profileButton.topAnchor.constraint(equalTo: followersStackView.bottomAnchor, constant: 24),
             profileButton.centerXAnchor.constraint(equalTo: userCardView.centerXAnchor),
@@ -220,9 +220,9 @@ final class UserDetailViewController: UIViewController {
     }
     
     private func setupFollowersStackViewContraints() {
-        followersStackView.translatesAutoresizingMaskIntoConstraints = false
         followersStackView.addArrangedSubview(followers)
         followersStackView.addArrangedSubview(following)
+        followersStackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(followersStackView)
         NSLayoutConstraint.activate([
             followersStackView.topAnchor.constraint(equalTo: contactsStackView.bottomAnchor, constant: 16),
@@ -243,8 +243,8 @@ final class UserDetailViewController: UIViewController {
     }
     
     private func setupGitHubBottomImageConstraints() {
-        githubBottomImage.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(githubBottomImage)
+        githubBottomImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             githubBottomImage.topAnchor.constraint(equalTo: userCardView.bottomAnchor, constant: 60),
             githubBottomImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),

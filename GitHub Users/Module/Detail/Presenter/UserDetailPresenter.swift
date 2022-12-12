@@ -32,8 +32,8 @@ final class UserDetailPresenter: UserDetailPresenterProtocol {
     }
     
     func getUserDetail() {
-        DispatchQueue.main.async { [weak self] in
-            Network.shared.getUserDetail(for: self?.userSearchName ?? "") { result in
+        Network.shared.getUserDetail(for: self.userSearchName ?? "") { [weak self] result in
+            DispatchQueue.main.async {
                 switch result {
                 case .success(let user):
                     self?.userDetail = user
